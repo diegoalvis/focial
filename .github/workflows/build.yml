@@ -1,15 +1,13 @@
 name: Build and upload artifacts
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -22,17 +20,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Build apk
-        run: flutter build appbundle
-      - run: flutter build appbundle
+        run: flutter build apk
       - name: Upload APK
         uses: actions/upload-artifact@master
         with:
           name: apk-build
-          path: build/app/outputs/bundle/release
-      - name: Build ipa
-        run: flutter build ios --release --no-codesign
-      - name: Upload iPA
-        uses: actions/upload-artifact@master
-        with:
-          name: ios-build
-          path: build/ios/iphoneos
+          path: build/app/outputs/flutter-apk
