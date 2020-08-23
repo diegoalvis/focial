@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -64,7 +65,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    _firebaseMessaging.getToken().then((value) => print(value));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+//    throw "fayaz defined exception";
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
