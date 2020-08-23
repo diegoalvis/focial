@@ -11,6 +11,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter
+
       - uses: actions/setup-java@v1
         with:
           java-version: '12.x'
@@ -18,10 +25,10 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Pull google-services.json from secrets
+      - name: Make duplicate config file
         run: |
-          touch android/app/google-services.json
-          echo "${{ SECRETS.GOOGLE_SERVICES }}" >> android/app/google-services.json
+          mv android/app/google-services-dup.json android/app/google-services.json
+
       - name: Install dependencies
         run: flutter pub get
       - name: Build apk
