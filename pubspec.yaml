@@ -49,7 +49,7 @@ dependencies:
   # use only for development
   fluttertoast: ^7.0.2
 
-  ots: ^0.0.1
+  ots: ^0.0.1+1
   chopper: ^3.0.3
 
 
