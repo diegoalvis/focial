@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class SocialButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(8.0),
       onTap: onPressed,
       child: CircleAvatar(
-        radius: 26,
+        radius: 23,
 //        foregroundColor: Colors.white,
         backgroundColor: Colors.white,
         backgroundImage: AssetImage(asset),
@@ -43,14 +44,14 @@ class AppPlatformButton extends StatelessWidget {
       this.padding,
       this.height,
       this.width,
-      this.borderRadius = 16.0,
+      this.borderRadius = 12.0,
       this.customChild})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final textChild = Text(
-      text?.toUpperCase(),
+      text?.toUpperCase() ?? "",
       style: style ??
           TextStyle(
             fontSize: 18.0,
@@ -79,12 +80,71 @@ class AppPlatformButton extends StatelessWidget {
         : RaisedButton(
             padding: padding,
             elevation: elevation,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      color: color ?? Theme
+          .of(context)
+          .primaryColor,
+      child: child,
+      onPressed: onPressed,
+    );
+  }
+}
+
+class AppPlatformButtonWithArrow extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String text;
+  final Color color;
+  final TextStyle style;
+  final EdgeInsets padding;
+
+  const AppPlatformButtonWithArrow({Key key,
+    this.onPressed,
+    this.text,
+    this.color,
+    this.style,
+    this.padding})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppPlatformButton(
+      color: color,
+      onPressed: onPressed,
+      customChild: SizedBox(
+        height: 50.0,
+        width: double.infinity,
+        child: Row(
+          children: [
+            Spacer(),
+            SizedBox(width: 16.0),
+            Text(
+              text,
+              style: style ??
+                  TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-            color: color ?? Theme.of(context).primaryColor,
-            child: child,
-            onPressed: onPressed,
-          );
+            Spacer(),
+            Material(
+              type: MaterialType.circle,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: Theme
+                      .of(context)
+                      .accentColor,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -373,6 +373,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -568,7 +575,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.11"
+    version: "1.6.14"
   path_provider_linux:
     dependency: transitive
     description:
