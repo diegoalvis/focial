@@ -10,7 +10,7 @@ import 'package:flutter/material.dart'
         ThemeData;
 
 class AppTheme {
-  static const Color primaryColor = Color(0xffA600FF);
+  static const Color primaryColor = Colors.green;
   static const Color backgroundColor = Color(0xffF2F2F2);
   static const Color textColor = Color(0xff25282B);
   static const Color errorColor = Color(0xffCF212A);
