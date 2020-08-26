@@ -38,7 +38,7 @@ dependencies:
   flutter_secure_storage: ^3.3.3
   hive: ^1.4.4
   hive_flutter: ^0.3.1
-  path_provider: ^1.6.11
+  path_provider: ^1.6.14
   logging: ^0.11.4
   cached_network_image: ^2.2.0+1
   flutter_platform_widgets: ^0.60.1
@@ -49,8 +49,10 @@ dependencies:
   # use only for development
   fluttertoast: ^7.0.2
 
-  ots: ^0.0.1
+  ots: ^0.0.1+1
   chopper: ^3.0.3
+  google_fonts: ^1.1.0
+
 
 
 dev_dependencies:
@@ -73,7 +75,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
