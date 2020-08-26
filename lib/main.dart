@@ -10,11 +10,10 @@ void main() {
 class FocialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = AppTheme.getTheme();
     return PlatformApp(
       title: 'Focial',
       material: (context, target) => MaterialAppData(
-        theme: theme,
+        theme: AppTheme.getTheme(),
       ),
       home: SplashScreen(),
     );

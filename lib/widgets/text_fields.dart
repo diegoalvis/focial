@@ -50,7 +50,7 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
       scrollPhysics: PageScrollPhysics(),
       controller: controller,
       validator: validator ??
-              (value) {
+          (value) {
             if (validateLength == 0) return null;
             if (value == null) return "Invalid input";
 
@@ -74,9 +74,7 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
       maxLength: maxLength,
       keyboardType: textInputType,
       initialValue: initialValue,
-      cursorColor: Theme
-          .of(context)
-          .primaryColor,
+      cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
         suffix: suffix,
         prefixIcon: Icon(
@@ -110,24 +108,25 @@ class OutlinedTextField extends StatelessWidget {
   final EdgeInsets padding, contentPadding;
   final Widget suffix;
 
-  const OutlinedTextField({Key key,
-    this.hint,
-    this.label,
-    this.validateLength,
-    this.save,
-    this.isObscure,
-    this.maxLength,
-    this.controller,
-    this.maxLines,
-    this.initialValue,
-    this.suffixIcon,
-    this.padding = const EdgeInsets.all(0.0),
-    this.suffix,
-    this.contentPadding =
-    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-    this.textInputType,
-    this.validator,
-    this.onChange})
+  const OutlinedTextField(
+      {Key key,
+      this.hint,
+      this.label,
+      this.validateLength,
+      this.save,
+      this.isObscure,
+      this.maxLength,
+      this.controller,
+      this.maxLines,
+      this.initialValue,
+      this.suffixIcon,
+      this.padding = const EdgeInsets.all(0.0),
+      this.suffix,
+      this.contentPadding =
+          const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+      this.textInputType,
+      this.validator,
+      this.onChange})
       : super(key: key);
 
   @override
@@ -141,7 +140,7 @@ class OutlinedTextField extends StatelessWidget {
           scrollPhysics: PageScrollPhysics(),
           controller: controller,
           validator: validator ??
-                  (value) {
+              (value) {
                 if (validateLength == 0) return null;
                 if (value == null) return "Invalid input";
 

@@ -80,15 +80,13 @@ class AppPlatformButton extends StatelessWidget {
         : RaisedButton(
             padding: padding,
             elevation: elevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      color: color ?? Theme
-          .of(context)
-          .primaryColor,
-      child: child,
-      onPressed: onPressed,
-    );
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+            color: color ?? Theme.of(context).primaryColor,
+            child: child,
+            onPressed: onPressed,
+          );
   }
 }
 
@@ -99,12 +97,13 @@ class AppPlatformButtonWithArrow extends StatelessWidget {
   final TextStyle style;
   final EdgeInsets padding;
 
-  const AppPlatformButtonWithArrow({Key key,
-    this.onPressed,
-    this.text,
-    this.color,
-    this.style,
-    this.padding})
+  const AppPlatformButtonWithArrow(
+      {Key key,
+      this.onPressed,
+      this.text,
+      this.color,
+      this.style,
+      this.padding})
       : super(key: key);
 
   @override
@@ -136,9 +135,7 @@ class AppPlatformButtonWithArrow extends StatelessWidget {
                 padding: const EdgeInsets.all(4.0),
                 child: Icon(
                   Icons.arrow_forward,
-                  color: Theme
-                      .of(context)
-                      .accentColor,
+                  color: Theme.of(context).accentColor,
                 ),
               ),
             )
