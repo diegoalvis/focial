@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 'Please enter the credentials which you have used during registration',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 17.0),
+                style: TextStyle(fontSize: 16.0),
               ),
             ),
             SizedBox(height: 8.0),
@@ -63,16 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 OutlineBorderedTFWithIcon(
                   label: 'Email',
-                  hint: 'john@doe.com',
                   icon: Icons.mail_outline,
-                  iconSize: 27.0,
+                  iconSize: 24.0,
                 ),
                 SizedBox(
                   height: 8.0,
                 ),
                 OutlineBorderedTFWithIcon(
                   label: 'Password',
-                  hint: '***************',
                   icon: FontAwesomeIcons.unlockAlt,
                 )
               ],

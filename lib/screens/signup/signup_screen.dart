@@ -38,7 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Text(
                 'Welcome to Focial\nRegister and get started, we never share our user\'s  data',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 17.0),
+                style: TextStyle(fontSize: 16.0),
               ),
             ),
             SizedBox(height: 8.0),
@@ -71,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   label: 'Email',
                   hint: 'john@doe.com',
                   icon: Icons.mail_outline,
-                  iconSize: 27.0,
+                  iconSize: 24.0,
                 ),
                 SizedBox(
                   height: 8.0,

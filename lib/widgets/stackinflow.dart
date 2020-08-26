@@ -14,7 +14,7 @@ class StackInFlow extends StatelessWidget {
         children: [
           Text(
             'Developed with  ',
-            style: TextStyle(fontSize: 15.0),
+            style: TextStyle(fontSize: 14.0),
           ),
           Icon(
             FontAwesomeIcons.solidHeart,
@@ -23,11 +23,11 @@ class StackInFlow extends StatelessWidget {
           ),
           Text(
             '  by',
-            style: TextStyle(fontSize: 15.0),
+            style: TextStyle(fontSize: 14.0),
           ),
           Text(
             ' StackInFlow',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15.0),
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.0),
           ),
         ],
       ),
