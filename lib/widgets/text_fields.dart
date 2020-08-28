@@ -28,7 +28,7 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
       this.onChange,
       this.validator,
       this.save,
-      this.isObscure,
+      this.isObscure = false,
       this.textInputType,
       this.maxLength,
       this.controller,
@@ -68,13 +68,15 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
         paste: true,
         selectAll: true,
       ),
-      obscureText: isObscure ?? false,
+      obscureText: isObscure,
       onSaved: save,
       maxLines: maxLines ?? 1,
       maxLength: maxLength,
       keyboardType: textInputType,
       initialValue: initialValue,
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Theme
+          .of(context)
+          .primaryColor,
       decoration: InputDecoration(
         suffix: suffix,
         prefixIcon: Icon(

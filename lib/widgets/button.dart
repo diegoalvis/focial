@@ -44,7 +44,7 @@ class AppPlatformButton extends StatelessWidget {
       this.padding,
       this.height,
       this.width,
-      this.borderRadius = 12.0,
+      this.borderRadius = 8.0,
       this.customChild})
       : super(key: key);
 
@@ -94,7 +94,6 @@ class AppPlatformButtonWithArrow extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
   final Color color;
-  final TextStyle style;
   final EdgeInsets padding;
 
   const AppPlatformButtonWithArrow(
@@ -102,7 +101,6 @@ class AppPlatformButtonWithArrow extends StatelessWidget {
       this.onPressed,
       this.text,
       this.color,
-      this.style,
       this.padding})
       : super(key: key);
 
@@ -112,7 +110,7 @@ class AppPlatformButtonWithArrow extends StatelessWidget {
       color: color,
       onPressed: onPressed,
       customChild: SizedBox(
-        height: 50.0,
+        height: 44.0,
         width: double.infinity,
         child: Row(
           children: [
@@ -120,12 +118,11 @@ class AppPlatformButtonWithArrow extends StatelessWidget {
             SizedBox(width: 16.0),
             Text(
               text,
-              style: style ??
-                  TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Spacer(),
             Material(
@@ -135,11 +132,56 @@ class AppPlatformButtonWithArrow extends StatelessWidget {
                 padding: const EdgeInsets.all(4.0),
                 child: Icon(
                   Icons.arrow_forward,
-                  color: Theme.of(context).accentColor,
+                  color: Theme
+                      .of(context)
+                      .accentColor,
+                  size: 18.0,
                 ),
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SocialMediaButton extends StatelessWidget {
+  final String asset, text;
+  final VoidCallback onPressed;
+
+  const SocialMediaButton({Key key,
+    this.asset,
+    this.text,
+    this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      child: AppPlatformButton(
+        color: Colors.white,
+        onPressed: onPressed,
+        customChild: SizedBox(
+          height: 44.0,
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Image.asset(asset),
+                SizedBox(width: 24.0),
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

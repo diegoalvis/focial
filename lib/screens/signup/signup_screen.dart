@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focial/screens/signup/signup_controller.dart';
+import 'package:focial/utils/assets.dart';
+import 'package:focial/utils/strings.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/stackinflow.dart';
@@ -11,6 +15,14 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final controller = SignupBloc();
+
+  @override
+  void dispose() {
+    controller.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   Widget _getBody() => SafeArea(
-        child: ListView(
+    child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
             Padding(
@@ -43,51 +55,82 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 8.0),
             _getForm(),
-            _getButtons()
+            _getButtons(),
+            SizedBox(height: 8.0),
+            _getSocialMediaButtons(),
           ],
         ),
       );
 
-  Widget _getForm() => Card(
-        elevation: 8.0,
-        margin: const EdgeInsets.all(8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Form(
-            child: Column(
-              children: [
-                OutlineBorderedTFWithIcon(
-                  label: 'Full name',
-                  hint: 'John Doe',
-                  icon: FontAwesomeIcons.user,
+  Widget _getForm() =>
+      BlocBuilder<SignupBloc, SignupState>(
+        buildWhen: (prev, curr) => prev.passwordShown != curr.passwordShown,
+        cubit: controller,
+        builder: (context, state) =>
+            Card(
+              elevation: 8.0,
+              margin: const EdgeInsets.all(8.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Form(
+                  key: controller.formKey,
+                  child: Column(
+                    children: [
+                      OutlineBorderedTFWithIcon(
+                        label: 'Full name',
+                        hint: 'John Doe',
+                        icon: FontAwesomeIcons.user,
+                        validateLength: 3,
+                        save: controller.saveName,
+                      ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      OutlineBorderedTFWithIcon(
+                        label: 'Email',
+                        hint: 'john@doe.com',
+                        icon: Icons.mail_outline,
+                        iconSize: 24.0,
+                        validator: controller.validateEmail,
+                        save: controller.saveEmail,
+                      ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlineBorderedTFWithIcon(
+                              label: 'Password',
+                              hint: '***************',
+                              icon: FontAwesomeIcons.unlockAlt,
+                              validator: controller.validatePassword,
+                              isObscure: state.passwordShown,
+                              save: controller.savePassword,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(state.passwordShown
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            onPressed: () =>
+                                controller
+                                    .add(SignupEvent.TogglePasswordVisibility),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                OutlineBorderedTFWithIcon(
-                  label: 'Email',
-                  hint: 'john@doe.com',
-                  icon: Icons.mail_outline,
-                  iconSize: 24.0,
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                OutlineBorderedTFWithIcon(
-                  label: 'Password',
-                  hint: '***************',
-                  icon: FontAwesomeIcons.unlockAlt,
-                )
-              ],
+              ),
             ),
-          ),
-        ),
       );
 
-  Widget _getButtons() => Column(
+  Widget _getButtons() =>
+      Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
@@ -96,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: AppPlatformButtonWithArrow(
-              onPressed: () {},
+              onPressed: () => controller.validateLoginForm(context),
               text: 'SIGNUP',
             ),
           ),
@@ -136,4 +179,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
           )
         ],
       );
+
+  Widget _getSocialMediaButtons() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SocialMediaButton(
+          onPressed: () {},
+          asset: Assets.GOOGLE_LOGO,
+          text: Strings.SIGNUP_WITH_GOOGLE,
+        ),
+        SizedBox(height: 8.0),
+        SocialMediaButton(
+          onPressed: () {},
+          asset: Assets.FACEBOOK_LOGO,
+          text: Strings.SIGNUP_WITH_FACEBOOK,
+        ),
+      ],
+    );
+  }
 }

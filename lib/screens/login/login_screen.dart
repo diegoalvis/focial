@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focial/screens/login/login_controller.dart';
 import 'package:focial/screens/signup/signup_screen.dart';
+import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
+import 'package:focial/utils/strings.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/stackinflow.dart';
@@ -13,6 +17,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final controller = LoginBloc();
+
+  @override
+  void dispose() {
+    controller.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,46 +52,76 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 'Please enter the credentials which you have used during registration',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.0),
+                style: TextStyle(fontSize: 17.0),
               ),
             ),
             SizedBox(height: 8.0),
             _getForm(),
-            _getButtons()
+            _getButtons(),
+            _getSocialMediaButtons()
           ],
         ),
       );
 
-  Widget _getForm() => Card(
-        elevation: 8.0,
-        margin: const EdgeInsets.all(8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Form(
-            child: Column(
-              children: [
-                OutlineBorderedTFWithIcon(
-                  label: 'Email',
-                  icon: Icons.mail_outline,
-                  iconSize: 24.0,
+  Widget _getForm() =>
+      BlocBuilder<LoginBloc, LoginState>(
+        buildWhen: (prev, curr) => prev.passwordShown != curr.passwordShown,
+        cubit: controller,
+        builder: (context, state) =>
+            Card(
+              elevation: 8.0,
+              margin: const EdgeInsets.all(8.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Form(
+                  key: controller.formKey,
+                  child: Column(
+                    children: [
+                      OutlineBorderedTFWithIcon(
+                        label: 'Email',
+                        hint: 'john@doe.com',
+                        icon: Icons.mail_outline,
+                        iconSize: 27.0,
+                        validator: controller.validateEmail,
+                        save: controller.saveEmail,
+                      ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlineBorderedTFWithIcon(
+                              label: 'Password',
+                              hint: '***************',
+                              icon: FontAwesomeIcons.unlockAlt,
+                              validator: controller.validatePassword,
+                              isObscure: state.passwordShown,
+                              save: controller.savePassword,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(state.passwordShown
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            onPressed: () =>
+                                controller.add(
+                                    LoginEvent.TogglePasswordVisibility),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                OutlineBorderedTFWithIcon(
-                  label: 'Password',
-                  icon: FontAwesomeIcons.unlockAlt,
-                )
-              ],
+              ),
             ),
-          ),
-        ),
       );
 
-  Widget _getButtons() => Column(
+  Widget _getButtons() =>
+      Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Align(
@@ -96,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: AppPlatformButtonWithArrow(
-              onPressed: () {},
+              onPressed: () => controller.validateLoginForm(context),
               text: 'LOGIN',
             ),
           ),
@@ -124,4 +166,24 @@ class _LoginScreenState extends State<LoginScreen> {
           )
         ],
       );
+
+  Widget _getSocialMediaButtons() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SocialMediaButton(
+          onPressed: () {},
+
+          asset: Assets.GOOGLE_LOGO,
+          text: Strings.LOGIN_WITH_GOOGLE,
+        ),
+        SizedBox(height: 8.0),
+        SocialMediaButton(
+          onPressed: () {},
+          asset: Assets.FACEBOOK_LOGO,
+          text: Strings.LOGIN_WITH_FACEBOOK,
+        ),
+      ],
+    );
+  }
 }
