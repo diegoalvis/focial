@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focial/screens/signup/signup_controller.dart';
+import 'package:focial/utils/assets.dart';
+import 'package:focial/utils/strings.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/stackinflow.dart';
@@ -40,23 +42,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _getBody() => SafeArea(
     child: ListView(
-      padding: const EdgeInsets.all(8.0),
-      children: [
-        Padding(
-          padding:
-          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-          child: Text(
-            'Welcome to Focial\nRegister and get started, we never share our user\'s  data',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16.0),
-          ),
+          padding: const EdgeInsets.all(8.0),
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+              child: Text(
+                'Welcome to Focial\nRegister and get started, we never share our user\'s  data',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.0),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            _getForm(),
+            _getButtons(),
+            SizedBox(height: 8.0),
+            _getSocialMediaButtons(),
+          ],
         ),
-        SizedBox(height: 8.0),
-        _getForm(),
-        _getButtons()
-      ],
-    ),
-  );
+      );
 
   Widget _getForm() =>
       BlocBuilder<SignupBloc, SignupState>(
@@ -175,4 +179,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
           )
         ],
       );
+
+  Widget _getSocialMediaButtons() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SocialMediaButton(
+          onPressed: () {},
+          asset: Assets.GOOGLE_LOGO,
+          text: Strings.SIGNUP_WITH_GOOGLE,
+        ),
+        SizedBox(height: 8.0),
+        SocialMediaButton(
+          onPressed: () {},
+          asset: Assets.FACEBOOK_LOGO,
+          text: Strings.SIGNUP_WITH_FACEBOOK,
+        ),
+      ],
+    );
+  }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focial/screens/login/login_controller.dart';
 import 'package:focial/screens/signup/signup_screen.dart';
+import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
+import 'package:focial/utils/strings.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/stackinflow.dart';
@@ -41,24 +43,25 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
   Widget _getBody() => SafeArea(
-    child: ListView(
-      padding: const EdgeInsets.all(8.0),
-      children: [
-        Padding(
-          padding:
-          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-          child: Text(
-            'Please enter the credentials which you have used during registration',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 17.0),
-          ),
+        child: ListView(
+          padding: const EdgeInsets.all(8.0),
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+              child: Text(
+                'Please enter the credentials which you have used during registration',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 17.0),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            _getForm(),
+            _getButtons(),
+            _getSocialMediaButtons()
+          ],
         ),
-        SizedBox(height: 8.0),
-        _getForm(),
-        _getButtons()
-      ],
-    ),
-  );
+      );
 
   Widget _getForm() =>
       BlocBuilder<LoginBloc, LoginState>(
@@ -163,4 +166,24 @@ class _LoginScreenState extends State<LoginScreen> {
           )
         ],
       );
+
+  Widget _getSocialMediaButtons() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SocialMediaButton(
+          onPressed: () {},
+
+          asset: Assets.GOOGLE_LOGO,
+          text: Strings.LOGIN_WITH_GOOGLE,
+        ),
+        SizedBox(height: 8.0),
+        SocialMediaButton(
+          onPressed: () {},
+          asset: Assets.FACEBOOK_LOGO,
+          text: Strings.LOGIN_WITH_FACEBOOK,
+        ),
+      ],
+    );
+  }
 }

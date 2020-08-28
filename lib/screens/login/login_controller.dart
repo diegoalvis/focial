@@ -1,10 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:focial/services/api.dart';
+import 'package:flutter/material.dart';
+import 'package:focial/services/auth.dart';
+import 'package:focial/utils/overlays.dart';
+import 'package:focial/utils/server_responses.dart';
 import 'package:focial/utils/validators.dart';
+import 'package:get_it/get_it.dart';
 import 'package:ots/ots.dart';
 
-enum LoginEvent { TogglePasswordVisibility, SubmitFields }
+enum LoginEvent { TogglePasswordVisibility }
 
 class LoginState {
   bool passwordShown;
@@ -17,6 +21,7 @@ class LoginState {
 }
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  final authService = GetIt.I<AuthService>();
   final formKey = GlobalKey<FormState>();
   String email, password;
 
@@ -32,13 +37,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> login() async {
-    final response = await APIService.api.login(
-      email: email,
-      password: password,
-    );
-    print(response.body);
-    print(response.error);
-    print(response.statusCode);
+    final response = await authService.login(email: email, password: password);
+    if (response.isSuccessful) {
+      AppOverlays.showSuccess("Server response", "Login Successful");
+    } else {
+      AppOverlays.showError(
+          "Server response", ServerResponse.getMessage(response));
+    }
     hideLoader();
   }
 
@@ -61,9 +66,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       case LoginEvent.TogglePasswordVisibility:
         yield togglePasswordVisibility();
         break;
-      case LoginEvent.SubmitFields:
-        // TODO: Handle this case.
-        break;
+      // case LoginEvent.SubmitFields:
+      //   break;
     }
   }
 

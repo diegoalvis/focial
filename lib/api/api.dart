@@ -20,6 +20,9 @@ abstract class FocialAPI extends ChopperService {
         services: [
           _$FocialAPI(),
         ],
+        interceptors: [
+          HttpLoggingInterceptor(),
+        ],
         converter: JsonConverter());
     return _$FocialAPI(client);
   }

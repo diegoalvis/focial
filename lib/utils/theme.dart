@@ -8,6 +8,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         TextTheme,
         ThemeData;
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color primaryColor = Colors.green;
@@ -27,7 +28,9 @@ class AppTheme {
 
   static ThemeData getTheme() {
     return ThemeData(
-//      fontFamily: GoogleFonts.roboto().fontFamily,
+      fontFamily: GoogleFonts
+          .openSans()
+          .fontFamily,
       backgroundColor: AppTheme.backgroundColor,
       primarySwatch: Colors.green,
       accentColor: AppTheme.orange,

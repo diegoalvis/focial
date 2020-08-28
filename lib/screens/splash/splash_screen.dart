@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:focial/screens/login/login_screen.dart';
+import 'package:focial/services/auth.dart';
 import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/stackinflow.dart';
+import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class SplashScreen extends StatelessWidget {
@@ -15,12 +17,15 @@ class SplashScreen extends StatelessWidget {
   Future<void> initApp(BuildContext context) async {
     if (!_isInitialized) {
       _isInitialized = true;
-      await Future.delayed(Duration(milliseconds: 800));
-      bool _loggedIn = false;
-      if (_loggedIn)
-        loggedIn(context);
-      else
-        notLoggedIn(context);
+
+      final authService = GetIt.I<AuthService>();
+      await authService.init();
+      print(authService.authData);
+      // if (authService.authData.isLoggedIn)
+      //   loggedIn(context);
+      // else
+      //   notLoggedIn(context);
+      notLoggedIn(context);
     }
   }
 
