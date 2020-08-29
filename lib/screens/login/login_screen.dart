@@ -63,61 +63,58 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-  Widget _getForm() =>
-      BlocBuilder<LoginBloc, LoginState>(
+  Widget _getForm() => BlocBuilder<LoginBloc, LoginState>(
         buildWhen: (prev, curr) => prev.passwordShown != curr.passwordShown,
         cubit: controller,
-        builder: (context, state) =>
-            Card(
-              elevation: 8.0,
-              margin: const EdgeInsets.all(8.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Form(
-                  key: controller.formKey,
-                  child: Column(
+        builder: (context, state) => Card(
+          elevation: 8.0,
+          margin: const EdgeInsets.all(8.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                children: [
+                  OutlineBorderedTFWithIcon(
+                    label: 'Email',
+                    hint: 'john@doe.com',
+                    icon: Icons.mail_outline,
+                    iconSize: 27.0,
+                    validator: controller.validateEmail,
+                    save: controller.saveEmail,
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Row(
                     children: [
-                      OutlineBorderedTFWithIcon(
-                        label: 'Email',
-                        hint: 'john@doe.com',
-                        icon: Icons.mail_outline,
-                        iconSize: 27.0,
-                        validator: controller.validateEmail,
-                        save: controller.saveEmail,
+                      Expanded(
+                        child: OutlineBorderedTFWithIcon(
+                          label: 'Password',
+                          hint: '***************',
+                          icon: FontAwesomeIcons.unlockAlt,
+                          validator: controller.validatePassword,
+                          isObscure: state.passwordShown,
+                          save: controller.savePassword,
+                        ),
                       ),
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlineBorderedTFWithIcon(
-                              label: 'Password',
-                              hint: '***************',
-                              icon: FontAwesomeIcons.unlockAlt,
-                              validator: controller.validatePassword,
-                              isObscure: state.passwordShown,
-                              save: controller.savePassword,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(state.passwordShown
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () =>
-                                controller.add(
-                                    LoginEvent.TogglePasswordVisibility),
-                          ),
-                        ],
+                      IconButton(
+                        icon: Icon(state.passwordShown
+                            ? Icons.visibility_off
+                            : Icons.visibility),
+                        onPressed: () =>
+                            controller.add(TogglePasswordVisibility()),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
             ),
+          ),
+        ),
       );
 
   Widget _getButtons() =>
@@ -138,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: AppPlatformButtonWithArrow(
-              onPressed: () => controller.validateLoginForm(context),
+              onPressed: () => controller.add(ValidateFormAndLogin(context)),
               text: 'LOGIN',
             ),
           ),
@@ -173,7 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         SocialMediaButton(
           onPressed: () {},
-
           asset: Assets.GOOGLE_LOGO,
           text: Strings.LOGIN_WITH_GOOGLE,
         ),

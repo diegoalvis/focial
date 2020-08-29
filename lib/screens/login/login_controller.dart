@@ -8,8 +8,26 @@ import 'package:focial/utils/validators.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ots/ots.dart';
 
-enum LoginEvent { TogglePasswordVisibility }
+/*
+-------------------------------------------------------------------------------
+--------------------------------------Events-----------------------------------
+-------------------------------------------------------------------------------
+ */
+abstract class LoginEvent {}
 
+class TogglePasswordVisibility extends LoginEvent {}
+
+class ValidateFormAndLogin extends LoginEvent {
+  BuildContext context;
+
+  ValidateFormAndLogin(this.context);
+}
+
+/*
+-------------------------------------------------------------------------------
+--------------------------------------State------------------------------------
+-------------------------------------------------------------------------------
+ */
 class LoginState {
   bool passwordShown;
 
@@ -20,6 +38,11 @@ class LoginState {
   }
 }
 
+/*
+-------------------------------------------------------------------------------
+--------------------------------------Bloc-------------------------------------
+-------------------------------------------------------------------------------
+ */
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final authService = GetIt.I<AuthService>();
   final formKey = GlobalKey<FormState>();
@@ -27,7 +50,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc() : super(LoginState());
 
-  Future<void> validateLoginForm(BuildContext context) async {
+  Future<void> _validateAndLogin(BuildContext context) async {
     if (!formKey.currentState.validate()) return;
     FocusScope.of(context).requestFocus(FocusNode());
     showLoader();
@@ -62,13 +85,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    switch (event) {
-      case LoginEvent.TogglePasswordVisibility:
-        yield togglePasswordVisibility();
-        break;
-      // case LoginEvent.SubmitFields:
-      //   break;
-    }
+    if (event is TogglePasswordVisibility) yield togglePasswordVisibility();
+    if (event is ValidateFormAndLogin) _validateAndLogin(event.context);
   }
 
   LoginState togglePasswordVisibility() {

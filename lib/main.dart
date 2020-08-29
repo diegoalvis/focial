@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:focial/screens/login/login_controller.dart';
 import 'package:focial/screens/splash/splash_screen.dart';
 import 'package:focial/services/auth.dart';
 import 'package:focial/utils/theme.dart';
@@ -49,10 +47,7 @@ class _FocialAppState extends State<FocialApp> {
         material: (context, target) => MaterialAppData(
           theme: AppTheme.getTheme(),
         ),
-        home: BlocProvider(
-          create: (_) => LoginBloc(),
-          child: SplashScreen(),
-        ),
+        home: SplashScreen(),
       ),
     );
   }
