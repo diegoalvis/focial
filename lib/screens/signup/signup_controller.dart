@@ -7,8 +7,26 @@ import 'package:focial/utils/validators.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ots/ots.dart';
 
-enum SignupEvent { TogglePasswordVisibility }
+/*
+-------------------------------------------------------------------------------
+--------------------------------------Events-----------------------------------
+-------------------------------------------------------------------------------
+ */
+abstract class SignupEvent {}
 
+class TogglePasswordVisibility extends SignupEvent {}
+
+class ValidateFormAndSignup extends SignupEvent {
+  BuildContext context;
+
+  ValidateFormAndSignup(this.context);
+}
+
+/*
+-------------------------------------------------------------------------------
+--------------------------------------State------------------------------------
+-------------------------------------------------------------------------------
+ */
 class SignupState {
   bool passwordShown;
 
@@ -19,6 +37,11 @@ class SignupState {
   }
 }
 
+/*
+-------------------------------------------------------------------------------
+--------------------------------------Bloc-------------------------------------
+-------------------------------------------------------------------------------
+ */
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
   final authService = GetIt.I<AuthService>();
   final formKey = GlobalKey<FormState>();
@@ -26,7 +49,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
   SignupBloc() : super(SignupState());
 
-  Future<void> validateLoginForm(BuildContext context) async {
+  Future<void> _validateAndRegister(BuildContext context) async {
     if (!formKey.currentState.validate()) return;
     FocusScope.of(context).requestFocus(FocusNode());
     showLoader();
@@ -68,11 +91,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
   @override
   Stream<SignupState> mapEventToState(SignupEvent event) async* {
-    switch (event) {
-      case SignupEvent.TogglePasswordVisibility:
-        yield togglePasswordVisibility();
-        break;
-    }
+    if (event is TogglePasswordVisibility) yield togglePasswordVisibility();
+    if (event is ValidateFormAndSignup) _validateAndRegister(event.context);
   }
 
   SignupState togglePasswordVisibility() {

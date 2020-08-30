@@ -41,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   Widget _getBody() => SafeArea(
-    child: ListView(
+        child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
             Padding(
@@ -117,8 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ? Icons.visibility_off
                                 : Icons.visibility),
                             onPressed: () =>
-                                controller
-                                    .add(SignupEvent.TogglePasswordVisibility),
+                                controller.add(TogglePasswordVisibility()),
                           ),
                         ],
                       )
@@ -139,7 +138,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: AppPlatformButtonWithArrow(
-              onPressed: () => controller.validateLoginForm(context),
+              onPressed: () => controller.add(ValidateFormAndSignup(context)),
               text: 'SIGNUP',
             ),
           ),

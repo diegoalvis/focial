@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:focial/screens/login/login_screen.dart';
+import 'package:focial/screens/tabs_screen/tabs_screen.dart';
 import 'package:focial/services/auth.dart';
 import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
@@ -21,16 +22,16 @@ class SplashScreen extends StatelessWidget {
       final authService = GetIt.I<AuthService>();
       await authService.init();
       print(authService.authData);
-      // if (authService.authData.isLoggedIn)
-      //   loggedIn(context);
-      // else
-      //   notLoggedIn(context);
-      notLoggedIn(context);
+      if (authService.authData.isLoggedIn)
+        loggedIn(context);
+      else
+        notLoggedIn(context);
     }
   }
 
   void loggedIn(BuildContext context) {
     print("loggedIn");
+    Navigator.of(context).push(AppNavigation.route(TabsScreen()));
   }
 
   void notLoggedIn(BuildContext context) {
