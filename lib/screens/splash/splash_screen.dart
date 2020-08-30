@@ -21,7 +21,7 @@ class SplashScreen extends StatelessWidget {
 
       final authService = GetIt.I<AuthService>();
       await authService.init();
-      print(authService.authData);
+      // print(authService.authData);
       if (authService.authData.isLoggedIn)
         loggedIn(context);
       else

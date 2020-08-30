@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:focial/screens/splash/splash_screen.dart';
 import 'package:focial/services/auth.dart';
+import 'package:focial/services/user.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/loader.dart';
 import 'package:get_it/get_it.dart';
@@ -16,6 +18,7 @@ void main() {
 
 void setupServices() {
   GetIt.I.registerSingleton<AuthService>(AuthService());
+  GetIt.I.registerSingleton<UserData>(UserData());
 }
 
 void setupLogging() {
@@ -42,12 +45,15 @@ class _FocialAppState extends State<FocialApp> {
       persistNoInternetNotification: false,
       showNetworkUpdates: false,
       loader: const Loader(size: 100.0),
-      child: PlatformApp(
-        title: 'Focial',
-        material: (context, target) => MaterialAppData(
-          theme: AppTheme.getTheme(),
+      child: MultiBlocProvider(
+        providers: [BlocProvider(create: (_) => UserData())],
+        child: PlatformApp(
+          title: 'Focial',
+          material: (context, target) => MaterialAppData(
+            theme: AppTheme.getTheme(),
+          ),
+          home: SplashScreen(),
         ),
-        home: SplashScreen(),
       ),
     );
   }
