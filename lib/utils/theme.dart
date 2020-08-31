@@ -44,13 +44,14 @@ class AppTheme {
       primarySwatch: Colors.green,
       accentColor: AppTheme.orange,
       appBarTheme: AppBarTheme(
-        color: AppTheme.backgroundColor,
+        color: Colors.white,
         elevation: 0.0,
         centerTitle: true,
         iconTheme: IconThemeData(
           color: AppTheme.textColor,
         ),
-        textTheme: TextTheme(caption: AppTheme.appBarTextStyle),
+        textTheme: TextTheme(
+            caption: AppTheme.appBarTextStyle.apply(color: Colors.black)),
       ),
     );
   }
