@@ -1,7 +1,7 @@
 class Urls {
-  // static const BASE_URL = "https://focial1.herokuapp.com/api/v1";
+  static const BASE_URL = "https://focial1.herokuapp.com/api/v1";
 
-  static const BASE_URL = "http://10.0.2.2:7000/api/v1";
+  // static const BASE_URL = "http://10.0.2.2:7000/api/v1";
 
   static final assetsBase = BASE_URL.replaceAll("api/v1", "");
 

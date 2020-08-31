@@ -12,6 +12,7 @@ import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/loader.dart';
 import 'package:focial/widgets/stackinflow.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share/share.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -97,22 +98,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             state.currentUser.coverPic != null &&
                     state.currentUser.coverPic.length > 5
                 ? CachedNetworkImage(
-              imageUrl: Urls.assetsBase + state.currentUser.coverPic,
-              fit: BoxFit.fill,
-              height: 260.0,
-              width: double.infinity,
-              alignment: Alignment.center,
-              placeholder: (context, data) =>
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-              imageBuilder: (context, image) =>
-                  _buildCoverFrame(
-                    Image(
-                      image: image,
-                      fit: BoxFit.fill,
+                    imageUrl: Urls.assetsBase + state.currentUser.coverPic,
+                    fit: BoxFit.fill,
+                    height: 260.0,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    placeholder: (context, data) => Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
+                    imageBuilder: (context, image) => _buildCoverFrame(
+                      Image(
+                        image: image,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   )
                 : Image.asset(
               "assets/pictures/girl-cover.jpg",
@@ -121,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fit: BoxFit.fill,
               frameBuilder: (context, child, res, re) =>
                   _buildCoverFrame(child),
-                  ),
+            ),
             Positioned(
               top: 160.0,
               left: (size.width - 150) / 2,
@@ -211,6 +210,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.indigoAccent,
               ),
               ButtonWithIconArrow(
+                onPressed: () {
+                  Share.share(
+                      'Check out Focial a trending social media app https://play.google.com/store/apps/details?id=org.stackinflow.focial&hl=en_IN');
+                },
                 icon: FontAwesomeIcons.userFriends,
                 text: 'Invite Friends',
                 color: Colors.lightBlueAccent,

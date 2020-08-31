@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:focial/screens/login/login_screen.dart';
 import 'package:focial/screens/tabs_screen/tabs_screen.dart';
 import 'package:focial/services/auth.dart';
+import 'package:focial/services/user.dart';
 import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/theme.dart';
@@ -21,6 +22,8 @@ class SplashScreen extends StatelessWidget {
 
       final authService = GetIt.I<AuthService>();
       await authService.init();
+      // fetch userData in background
+      GetIt.I<UserData>()..fetchUser();
       // print(authService.authData);
       if (authService.authData.isLoggedIn)
         loggedIn(context);
