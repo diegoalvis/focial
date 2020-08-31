@@ -74,9 +74,7 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
       maxLength: maxLength,
       keyboardType: textInputType,
       initialValue: initialValue,
-      cursorColor: Theme
-          .of(context)
-          .primaryColor,
+      cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
         suffix: suffix,
         prefixIcon: Icon(
@@ -93,7 +91,7 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
   }
 }
 
-class OutlinedTextField extends StatelessWidget {
+class CTextField extends StatelessWidget {
   final String hint;
   final String label;
   final int validateLength;
@@ -109,26 +107,31 @@ class OutlinedTextField extends StatelessWidget {
   final String initialValue;
   final EdgeInsets padding, contentPadding;
   final Widget suffix;
+  final String prefix;
+  final InputBorder border;
+  final bool enabled;
 
-  const OutlinedTextField(
-      {Key key,
-      this.hint,
-      this.label,
-      this.validateLength,
-      this.save,
-      this.isObscure,
-      this.maxLength,
-      this.controller,
-      this.maxLines,
-      this.initialValue,
-      this.suffixIcon,
-      this.padding = const EdgeInsets.all(0.0),
-      this.suffix,
-      this.contentPadding =
-          const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-      this.textInputType,
-      this.validator,
-      this.onChange})
+  const CTextField({Key key,
+    this.hint,
+    this.label,
+    this.validateLength,
+    this.save,
+    this.isObscure,
+    this.maxLength,
+    this.controller,
+    this.maxLines,
+    this.initialValue,
+    this.suffixIcon,
+    this.enabled,
+    this.padding = const EdgeInsets.all(0.0),
+    this.suffix,
+    this.contentPadding =
+    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+    this.textInputType,
+    this.validator,
+    this.onChange,
+    this.border,
+    this.prefix})
       : super(key: key);
 
   @override
@@ -139,10 +142,11 @@ class OutlinedTextField extends StatelessWidget {
         padding: padding,
         child: TextFormField(
           onChanged: onChange,
+          enabled: enabled,
           scrollPhysics: PageScrollPhysics(),
           controller: controller,
           validator: validator ??
-              (value) {
+                  (value) {
                 if (validateLength == 0) return null;
                 if (value == null) return "Invalid input";
 
@@ -167,10 +171,10 @@ class OutlinedTextField extends StatelessWidget {
           keyboardType: textInputType,
           initialValue: initialValue,
           decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              border: border,
               suffix: suffix,
+              prefixText: prefix,
               contentPadding: contentPadding,
-//              counterText: "",
               hintText: hint ?? ' ',
               labelText: label ?? ' ',
               suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null),

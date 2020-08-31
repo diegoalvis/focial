@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:chopper/chopper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:focial/models/user.dart';
 import 'package:focial/services/api.dart';
@@ -15,9 +16,10 @@ class UserDataState {
 }
 
 class UserData extends Cubit<UserDataState> {
-  UserData() : super(UserDataState());
+  UserData() : super(UserDataState(currentUser: User()));
 
   Future<void> fetchUser() async {
+    if (state.status == Status.Loading || state.status == Status.Loaded) return;
     final response = await APIService.api.getUser();
     emit(UserDataState(status: Status.Loading));
     if (response.isSuccessful) {
@@ -31,6 +33,15 @@ class UserData extends Cubit<UserDataState> {
       debugPrint("User data can't be loaded ${response.error}");
       emit(UserDataState(status: Status.Error));
     }
+  }
+
+  Future<Response> updateUserProfile(User user) async {
+    emit(UserDataState(currentUser: user, status: Status.Loading));
+    final response = await APIService.api.updateUser(user.toJson());
+    if (response.isSuccessful) {
+      emit(UserDataState(currentUser: user, status: Status.Loaded));
+    }
+    return response;
   }
 
   Future<void> updateProfilePicture(String filePath) async {

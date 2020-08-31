@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SocialButton extends StatelessWidget {
   final String asset;
@@ -254,6 +255,24 @@ class StatisticsText extends StatelessWidget {
             style: TextStyle(color: Colors.black),
           )
         ]),
+      ),
+    );
+  }
+}
+
+class CameraButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.circle,
+      color: Colors.grey.withOpacity(0.75),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Icon(
+          FontAwesomeIcons.camera,
+          color: Colors.white,
+          size: 16.0,
+        ),
       ),
     );
   }

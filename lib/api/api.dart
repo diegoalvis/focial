@@ -21,8 +21,14 @@ abstract class FocialAPI extends ChopperService {
   Future<Response<dynamic>> login(
       {@Field() String email, @Field() String password});
 
-  @Get(path: Urls.GET_USER)
+  @Get(path: Urls.USER)
   Future<Response<dynamic>> getUser();
+
+  @Patch(path: Urls.USER)
+  Future<Response<dynamic>> updateUser(@body Map<String, dynamic> body);
+
+  @Get(path: Urls.CHECK_USERNAME + "{username}")
+  Future<Response<dynamic>> checkUsername(@Path() String username);
 
   @Post(path: Urls.UPLOAD_PROFILE_PICTURE)
   @multipart

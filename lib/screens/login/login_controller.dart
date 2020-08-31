@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:focial/screens/tabs_screen/tabs_screen.dart';
 import 'package:focial/services/auth.dart';
+import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/overlays.dart';
 import 'package:focial/utils/server_responses.dart';
 import 'package:focial/utils/validators.dart';
@@ -56,13 +58,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     showLoader();
     formKey.currentState.save();
     debugPrint("Login fields are correct, email: $email, password: $password");
-    login();
+    login(context);
   }
 
-  Future<void> login() async {
+  Future<void> login(BuildContext context) async {
     final response = await authService.login(email: email, password: password);
     if (response.isSuccessful) {
-      AppOverlays.showSuccess("Server response", "Login Successful");
+      // AppOverlays.showSuccess("Server response", "Login Successful");
+      Navigator.of(context).push(AppNavigation.route(TabsScreen()));
     } else {
       AppOverlays.showError(
           "Server response", ServerResponse.getMessage(response));

@@ -45,6 +45,21 @@ class _$FocialAPI extends FocialAPI {
   }
 
   @override
+  Future<Response<dynamic>> updateUser(Map<String, dynamic> body) {
+    final $url = 'user';
+    final $body = body;
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> checkUsername(String username) {
+    final $url = 'user/check/$username';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> uploadProfilePicture(String file) {
     final $url = 'user/pp';
     final $parts = <PartValue>[PartValueFile<String>('file', file)];

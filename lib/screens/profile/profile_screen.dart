@@ -1,26 +1,17 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:focial/api/urls.dart';
+import 'package:focial/screens/profile/edit_profile_screen.dart';
+import 'package:focial/screens/profile/profile_controller.dart';
 import 'package:focial/services/user.dart';
+import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/loader.dart';
 import 'package:focial/widgets/stackinflow.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-
-void main() => runApp(
-      MaterialApp(
-        home: ProfileScreen(),
-      ),
-    );
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -28,84 +19,22 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  var pp;
+  final profileBloc = ProfileBloc();
 
-  final userData = GetIt.I<UserData>();
-
-  void _updateProfilePicture() async {
-    // update profile picture
-    pp = await ImagePicker.platform
-        .pickImage(source: ImageSource.gallery, imageQuality: 80);
-
-    if (pp != null) {
-      File croppedFile = await ImageCropper.cropImage(
-        sourcePath: pp.path,
-        // aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        androidUiSettings: AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: AppTheme.primaryColor,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.square,
-          lockAspectRatio: true,
-        ),
-        iosUiSettings: IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ),
-      );
-      if (croppedFile != null) {
-        userData.updateProfilePicture(croppedFile.path);
-      }
-    }
-  }
-
-  var cp;
-
-  void _updateCoverPicture() async {
-    // update profile picture
-    cp = await ImagePicker.platform
-        .pickImage(source: ImageSource.gallery, imageQuality: 80);
-
-    if (cp != null) {
-      File croppedFile = await ImageCropper.cropImage(
-        sourcePath: cp.path,
-        // aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-        androidUiSettings: AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: AppTheme.primaryColor,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.ratio16x9,
-          lockAspectRatio: true,
-        ),
-        iosUiSettings: IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ),
-      );
-      if (croppedFile != null) {
-        userData.updateCoverPicture(croppedFile.path);
-      }
-    }
+  @override
+  void dispose() {
+    profileBloc.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    // return PlatformScaffold(
-    //   body: profile(
-    //       UserDataState(
-    //         currentUser: User(
-    //           firstName: 'Random',
-    //           lastName: 'Girl',
-    //           photoUrl: 'a',
-    //         ),
-    //       ),
-    //       size),
-    // );
-
     return PlatformScaffold(
       backgroundColor: Colors.white.withOpacity(0.1),
       body: BlocBuilder<UserData, UserDataState>(
-        cubit: userData..fetchUser(),
+        cubit: profileBloc.userData,
         buildWhen: (prev, curr) => prev.status != curr.status,
         builder: (context, state) {
           switch (state.status) {
@@ -168,39 +97,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
             state.currentUser.coverPic != null &&
                     state.currentUser.coverPic.length > 5
                 ? CachedNetworkImage(
-                    imageUrl: Urls.assetsBase + state.currentUser.coverPic,
-                    fit: BoxFit.fill,
-                    height: 260.0,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    placeholder: (context, data) => Center(
-                      child: CircularProgressIndicator(),
+              imageUrl: Urls.assetsBase + state.currentUser.coverPic,
+              fit: BoxFit.fill,
+              height: 260.0,
+              width: double.infinity,
+              alignment: Alignment.center,
+              placeholder: (context, data) =>
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+              imageBuilder: (context, image) =>
+                  _buildCoverFrame(
+                    Image(
+                      image: image,
+                      fit: BoxFit.fill,
                     ),
-                    imageBuilder: (context, image) => Material(
-                      elevation: 4.0,
-                      clipBehavior: Clip.antiAlias,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.elliptical(150.0, 20),
-                          bottomRight: Radius.elliptical(150.0, 20)),
-                      child: Image(
-                        image: image,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                  ),
                   )
                 : Image.asset(
-                    "assets/pictures/girl-cover.jpg",
-                    height: 260.0,
-                    width: double.infinity,
-                    fit: BoxFit.fill,
-                    frameBuilder: (context, child, res, re) => Material(
-                      elevation: 4.0,
-                      clipBehavior: Clip.antiAlias,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.elliptical(150.0, 20),
-                          bottomRight: Radius.elliptical(150.0, 20)),
-                      child: child,
-                    ),
+              "assets/pictures/girl-cover.jpg",
+              height: 260.0,
+              width: double.infinity,
+              fit: BoxFit.fill,
+              frameBuilder: (context, child, res, re) =>
+                  _buildCoverFrame(child),
                   ),
             Positioned(
               top: 160.0,
@@ -235,10 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               top: 275.0,
               right: (size.width - 165) / 2,
               child: InkWell(
-                onTap: () {
-                  _updateProfilePicture();
-                  // print("change");
-                },
+                onTap: () => profileBloc.add(UpdateProfilePicture()),
                 child: CameraButton(),
               ),
             ),
@@ -246,9 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               top: 10.0,
               right: 10.0,
               child: InkWell(
-                onTap: () {
-                  _updateCoverPicture();
-                },
+                onTap: () => profileBloc.add(UpdateCoverPicture()),
                 child: CameraButton(),
               ),
             )
@@ -289,7 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ButtonWithIconArrow(
-                onPressed: () {},
+                onPressed: () =>
+                    pushScreen(EditProfileScreen(user: state.currentUser)),
                 icon: FontAwesomeIcons.userAlt,
                 text: 'Edit Profile',
                 color: Colors.indigoAccent,
@@ -329,33 +245,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-      );
+  );
 
-  Widget _frameProfilePicture(context, child, res, rr) => Material(
+  Widget _frameProfilePicture(context, child, res, rr) =>
+      Material(
         color: Colors.white,
         child: child,
         elevation: 4.0,
         clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(8.0),
       );
-}
 
-class CameraButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      type: MaterialType.circle,
-      color: Colors.grey.withOpacity(0.75),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Icon(
-          FontAwesomeIcons.camera,
-          color: Colors.white,
-          size: 16.0,
-        ),
-      ),
-    );
-  }
-}
+  Widget _buildCoverFrame(Widget child) =>
+      Material(
+        elevation: 4.0,
+        clipBehavior: Clip.antiAlias,
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.elliptical(150.0, 20),
+            bottomRight: Radius.elliptical(150.0, 20)),
+        child: child,
+      );
 
-final random = new Random();
+  void pushScreen(Widget to) =>
+      Navigator.of(context).push(AppNavigation.route(to));
+}
