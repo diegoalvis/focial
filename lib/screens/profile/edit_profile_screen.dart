@@ -1,45 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:focial/models/user.dart';
-import 'package:focial/screens/profile/edit_profile_controller.dart';
+import 'package:focial/screens/profile/edit_profile_viewmodel.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/debouncer.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/button.dart';
+import 'package:stacked/stacked.dart';
 
-void main() => runApp(
-      MaterialApp(
-        home: EditProfileScreen(
-          user: User(),
-        ),
-      ),
-    );
-
-class EditProfileScreen extends StatefulWidget {
-  final User user;
-
-  const EditProfileScreen({Key key, this.user}) : super(key: key);
-
-  @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
-}
-
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class EditProfileScreen extends StatelessWidget {
   final contentPadding =
       EdgeInsets.only(left: 0.0, right: 8.0, top: 8.0, bottom: 8.0);
   final border = UnderlineInputBorder();
 
-  final editProfileBloc = EditProfileBloc();
   final _debouncer = Debouncer(milliseconds: 300);
 
-  @override
-  void initState() {
-    editProfileBloc.add(UpdateUser(widget.user));
-    super.initState();
-  }
+  EditProfileScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,29 +32,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Navigator.of(context).pop();
             }),
       ),
-      body: SafeArea(
-        child: BlocBuilder<EditProfileBloc, EditProfileState>(
-          cubit: editProfileBloc,
-          buildWhen: (c, p) {
-            print("State: ${c.status} ${p.status}");
-            return c.status != p.status || c.usernameError != p.usernameError;
-          },
-          builder: (context, state) {
-            return Form(
-              key: editProfileBloc.formKey,
-              child: _getUpdateProfileForm(state),
-            );
-          },
+      body: ViewModelBuilder<EditProfileViewModel>.reactive(
+        viewModelBuilder: () => EditProfileViewModel(),
+        onModelReady: (m) => m.init(context),
+        builder: (context, model, child) => SafeArea(
+          child: Form(
+            key: model.formKey,
+            child: _getUpdateProfileForm(model, context),
+          ),
         ),
       ),
     );
   }
 
-  void addUserUpdateEvent(User cu) {
-    editProfileBloc.add(UpdateUser(cu));
-  }
-
-  Widget _getUpdateProfileForm(EditProfileState state) => ListView(
+  Widget _getUpdateProfileForm(
+          EditProfileViewModel controller, BuildContext context) =>
+      ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           SizedBox(height: 16.0),
@@ -86,9 +56,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
           TextFormField(
-            initialValue: widget.user?.firstName,
+            initialValue: controller.currentUser?.firstName,
             onSaved: (value) {
-              state.currentUser.firstName = value;
+              controller.currentUser.firstName = value;
             },
             validator: (v) {
               return null;
@@ -101,9 +71,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           // SizedBox(height: 8.0),
           TextFormField(
-            initialValue: widget.user?.lastName,
+            initialValue: controller.currentUser?.lastName,
             onSaved: (value) {
-              state.currentUser.lastName = value;
+              controller.currentUser.lastName = value;
             },
             decoration: InputDecoration(
               contentPadding: contentPadding,
@@ -113,10 +83,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           // SizedBox(height: 8.0),
           TextFormField(
-            validator: editProfileBloc.usernameValidation,
-            initialValue: widget.user?.username,
+            validator: controller.usernameValidation,
+            initialValue: controller.currentUser?.username,
             onSaved: (value) {
-              state.currentUser.username = value;
+              controller.currentUser.username = value;
             },
             keyboardType: TextInputType.name,
             inputFormatters: [
@@ -124,12 +94,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   newValue.copyWith(text: newValue.text.toLowerCase()))
             ],
             onChanged: (String value) {
-              _debouncer.run(() => editProfileBloc.add(CheckUsername(value)));
+              _debouncer.run(() => controller.checkUsername(value));
             },
             decoration: InputDecoration(
                 contentPadding: contentPadding,
                 border: border,
-                suffix: state.status == Status.Loading
+                suffix: controller.status == Status.Loading
                     ? SizedBox(
                         height: 16.0,
                         width: 16.0,
@@ -138,14 +108,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 labelText: 'Username',
                 prefixText: '@'),
           ),
-          state.usernameChecked || state.usernameError
+          controller.usernameChecked || controller.usernameError
               ? Text(
-                  '${state.usernameMessage}',
+                  '${controller.usernameMessage}',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: state.usernameError
+                    color: controller.usernameError
                         ? AppTheme.errorColor
-                        : state.usernameAvailable
+                        : controller.usernameAvailable
                             ? Colors.green
                             : AppTheme.errorColor,
                   ),
@@ -153,11 +123,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               : SizedBox(),
           // SizedBox(height: 8.0),
           TextFormField(
-            initialValue: widget.user?.bio,
+            initialValue: controller.currentUser?.bio,
             maxLines: 1,
             maxLength: 128,
             onSaved: (value) {
-              state.currentUser.bio = value;
+              controller.currentUser.bio = value;
             },
             decoration: InputDecoration(
               contentPadding: contentPadding,
@@ -167,11 +137,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           // SizedBox(height: 8.0),
           TextFormField(
-            initialValue: widget.user?.age?.toString(),
+            initialValue: controller.currentUser?.age?.toString(),
             keyboardType: TextInputType.number,
-            validator: editProfileBloc.validateAge,
+            validator: controller.validateAge,
             onSaved: (value) {
-              state.currentUser.age = int.parse(value ?? "");
+              controller.currentUser.age = int.parse(value ?? "");
             },
             decoration: InputDecoration(
               contentPadding: contentPadding,
@@ -185,10 +155,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
           TextFormField(
-            initialValue: widget.user?.phone,
-            validator: editProfileBloc.validatePhone,
+            initialValue: controller.currentUser?.phone,
+            validator: controller.validatePhone,
             onSaved: (value) {
-              state.currentUser.phone = value;
+              controller.currentUser.phone = value;
             },
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -199,7 +169,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           // SizedBox(height: 8.0),
           TextFormField(
-            initialValue: widget.user?.email,
+            initialValue: controller.currentUser?.email,
             enabled: false,
             decoration: InputDecoration(
               contentPadding: contentPadding,
@@ -211,7 +181,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           AppPlatformButton(
             height: 44.0,
             width: double.infinity,
-            onPressed: () => editProfileBloc.add(ValidateForm(context)),
+            onPressed: () => controller.validateForm(context),
             text: 'UPDATE',
           ),
         ],

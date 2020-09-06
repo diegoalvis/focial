@@ -1,45 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focial/screens/tabs_screen/tabs_controller.dart';
+import 'package:focial/screens/tabs_screen/tabs_viewmodel.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/custom_nav_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
-class TabsScreen extends StatefulWidget {
-  @override
-  _TabsScreenState createState() => _TabsScreenState();
-}
-
-class _TabsScreenState extends State<TabsScreen> {
-  final controller = TabsBloc();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.close();
-    super.dispose();
-  }
-
+class TabsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TabsBloc, TabsState>(
-      cubit: controller,
-      buildWhen: (prev, curr) =>
-          prev.currentScreenIndex != curr.currentScreenIndex,
-      builder: (context, state) => Scaffold(
-        body: controller.screens[state.currentScreenIndex],
-        bottomNavigationBar: CustomBottomNavBar(
-          onTap: (int screen) {
-            controller.add(ChangeScreen(screen: screen));
-          },
-          iconSize: 22.0,
-          currentSelection: state.currentScreenIndex,
-          items: getBottomNavBarItems(),
-        ),
+    final tabsScreenController = Provider.of<TabsViewmodel>(context);
+    return Scaffold(
+      body:
+          tabsScreenController.screens[tabsScreenController.currentScreenIndex],
+      bottomNavigationBar: CustomBottomNavBar(
+        onTap: (int screen) {
+          tabsScreenController.currentScreenIndex = screen;
+        },
+        iconSize: 22.0,
+        currentSelection: tabsScreenController.currentScreenIndex,
+        items: getBottomNavBarItems(),
       ),
     );
   }

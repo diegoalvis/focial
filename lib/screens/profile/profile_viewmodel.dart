@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/theme.dart';
@@ -8,37 +6,14 @@ import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-/*
--------------------------------------------------------------------------------
---------------------------------------Events-----------------------------------
--------------------------------------------------------------------------------
- */
-abstract class ProfileEvent {}
-
-class UpdateProfilePicture extends ProfileEvent {}
-
-class UpdateCoverPicture extends ProfileEvent {}
-
-/*
--------------------------------------------------------------------------------
---------------------------------------State------------------------------------
--------------------------------------------------------------------------------
- */
-class ProfileState {}
-
-/*
--------------------------------------------------------------------------------
---------------------------------------Bloc-------------------------------------
--------------------------------------------------------------------------------
- */
-class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+class ProfileViewModel extends ChangeNotifier {
+  BuildContext _context;
   var pp;
   var cp;
   final userData = GetIt.I<UserData>()..fetchUser();
+  Status status = Status.Loaded;
 
-  ProfileBloc() : super(ProfileState());
-
-  void _pickProfilePicture() async {
+  void pickProfilePicture() async {
     // ignore: invalid_use_of_visible_for_testing_member
     pp = await ImagePicker.platform
         .pickImage(source: ImageSource.gallery, imageQuality: 80);
@@ -63,7 +38,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  void _pickCoverPicture() async {
+  void pickCoverPicture() async {
     // ignore: invalid_use_of_visible_for_testing_member
     cp = await ImagePicker.platform
         .pickImage(source: ImageSource.gallery, imageQuality: 80);
@@ -88,10 +63,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  @override
-  Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
-    if (event is UpdateProfilePicture) _pickProfilePicture();
-    if (event is UpdateCoverPicture) _pickCoverPicture();
-    yield state;
+  void init(BuildContext context) {
+    _context = context;
   }
 }

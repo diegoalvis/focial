@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focial/screens/login/login_controller.dart';
+import 'package:focial/screens/login/login_viewmodel.dart';
 import 'package:focial/screens/signup/signup_screen.dart';
 import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
@@ -10,28 +9,20 @@ import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/stackinflow.dart';
 import 'package:focial/widgets/text_fields.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stacked/stacked.dart';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final controller = LoginBloc();
-
-  @override
-  void dispose() {
-    controller.close();
-    super.dispose();
-  }
-
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(),
-      backgroundColor: AppTheme.backgroundColor,
-      body: _getBody(),
-      bottomNavigationBar: StackInFlow(),
+    return ViewModelBuilder<LoginViewModel>.reactive(
+      viewModelBuilder: () => LoginViewModel(),
+      onModelReady: (m) => m.init(context),
+      builder: (context, model, child) => Scaffold(
+        appBar: _appBar(),
+        backgroundColor: AppTheme.backgroundColor,
+        body: _getBody(model, context),
+        bottomNavigationBar: StackInFlow(),
+      ),
     );
   }
 
@@ -42,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-  Widget _getBody() => SafeArea(
+  Widget _getBody(LoginViewModel controller, BuildContext context) => SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
@@ -56,69 +47,63 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(height: 8.0),
-            _getForm(),
-            _getButtons(),
+            _getForm(controller, context),
+            _getButtons(controller, context),
             _getSocialMediaButtons()
           ],
         ),
       );
 
-  Widget _getForm() => BlocBuilder<LoginBloc, LoginState>(
-        buildWhen: (prev, curr) => prev.passwordShown != curr.passwordShown,
-        cubit: controller,
-        builder: (context, state) => Card(
-          elevation: 8.0,
-          margin: const EdgeInsets.all(8.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Form(
-              key: controller.formKey,
-              child: Column(
-                children: [
-                  OutlineBorderedTFWithIcon(
-                    label: 'Email',
-                    hint: 'john@doe.com',
-                    icon: Icons.mail_outline,
-                    iconSize: 27.0,
-                    validator: controller.validateEmail,
-                    save: controller.saveEmail,
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlineBorderedTFWithIcon(
-                          label: 'Password',
-                          hint: '***************',
-                          icon: FontAwesomeIcons.unlockAlt,
-                          validator: controller.validatePassword,
-                          isObscure: state.passwordShown,
-                          save: controller.savePassword,
-                        ),
+  Widget _getForm(LoginViewModel controller, BuildContext context) => Card(
+        elevation: 8.0,
+        margin: const EdgeInsets.all(8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              children: [
+                OutlineBorderedTFWithIcon(
+                  label: 'Email',
+                  hint: 'john@doe.com',
+                  icon: Icons.mail_outline,
+                  iconSize: 27.0,
+                  validator: controller.validateEmail,
+                  save: controller.saveEmail,
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlineBorderedTFWithIcon(
+                        label: 'Password',
+                        hint: '***************',
+                        icon: FontAwesomeIcons.unlockAlt,
+                        validator: controller.validatePassword,
+                        isObscure: !controller.passwordShown,
+                        save: controller.savePassword,
                       ),
-                      IconButton(
-                        icon: Icon(state.passwordShown
-                            ? Icons.visibility_off
-                            : Icons.visibility),
-                        onPressed: () =>
-                            controller.add(TogglePasswordVisibility()),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    IconButton(
+                      icon: Icon(controller.passwordShown
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () => controller.togglePasswordVisibility(),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
       );
 
-  Widget _getButtons() =>
-      Column(
+  Widget _getButtons(LoginViewModel controller, BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Align(
@@ -135,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: AppPlatformButtonWithArrow(
-              onPressed: () => controller.add(ValidateFormAndLogin(context)),
+              onPressed: () => controller.validateAndLogin(context),
               text: 'LOGIN',
             ),
           ),

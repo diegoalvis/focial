@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:focial/api/urls.dart';
 import 'package:focial/screens/profile/edit_profile_screen.dart';
-import 'package:focial/screens/profile/profile_controller.dart';
+import 'package:focial/screens/profile/profile_viewmodel.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/theme.dart';
@@ -12,46 +11,49 @@ import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/loader.dart';
 import 'package:focial/widgets/stackinflow.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_it/get_it.dart';
 import 'package:share/share.dart';
+import 'package:stacked/stacked.dart';
 
-class ProfileScreen extends StatefulWidget {
-  @override
-  _ProfileScreenState createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  final profileBloc = ProfileBloc();
-
-  @override
-  void dispose() {
-    profileBloc.close();
-    super.dispose();
-  }
-
+class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return PlatformScaffold(
       backgroundColor: Colors.white.withOpacity(0.1),
-      body: BlocBuilder<UserData, UserDataState>(
-        cubit: profileBloc.userData,
-        buildWhen: (prev, curr) => prev.status != curr.status,
-        builder: (context, state) {
-          switch (state.status) {
-            case Status.Idle:
-              return loading();
-            case Status.Loading:
-              return loading();
-            case Status.Loaded:
-              return profile(state, size);
-            case Status.Error:
-              return error();
-          }
-          return loading();
+      body: ViewModelBuilder<ProfileViewModel>.reactive(
+        viewModelBuilder: () => ProfileViewModel(),
+        onModelReady: (m) => m.init(context),
+        builder: (context, model, child) {
+          return _profileModel(model, size, context);
         },
       ),
     );
+  }
+
+  Widget _profileModel(
+      ProfileViewModel profileViewModel, Size size, BuildContext context) {
+    return ViewModelBuilder<UserData>.reactive(
+      viewModelBuilder: () => GetIt.I<UserData>(),
+      onModelReady: (m) => m.init(),
+      builder: (context, userData, child) =>
+          _body(userData, size, context, profileViewModel),
+    );
+  }
+
+  Widget _body(UserData userDataProvider, Size size, BuildContext context,
+      ProfileViewModel profileViewModel) {
+    switch (userDataProvider.status) {
+      case Status.Idle:
+        return loading();
+      case Status.Loading:
+        return loading();
+      case Status.Loaded:
+        return profile(userDataProvider, size, context, profileViewModel);
+      case Status.Error:
+        return error();
+    }
+    return loading();
   }
 
   Widget loading() => Center(
@@ -66,12 +68,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final padding = EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0);
 
-  Widget profile(UserDataState state, Size size) => ListView(
+  Widget profile(UserData userDataProvider, Size size, BuildContext context,
+          ProfileViewModel profileViewModel) =>
+      ListView(
         children: [
-          _getProfileAndCoverPic(state, size),
+          _getProfileAndCoverPic(userDataProvider, size, profileViewModel),
           Center(
             child: Text(
-              '${state.currentUser.firstName} ${state.currentUser.lastName}',
+              '${userDataProvider.currentUser.firstName} ${userDataProvider.currentUser.lastName}',
               style: TextStyle(
                 color: AppTheme.textColor,
                 fontSize: 20.0,
@@ -81,24 +85,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(height: 4.0),
           Text(
-            "${state.currentUser.bio ?? " "}",
+            "${userDataProvider.currentUser.bio ?? " "}",
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 4.0),
-          _getProfileStats(state),
+          _getProfileStats(userDataProvider),
           SizedBox(height: 8.0),
-          _getSettingsSection(state),
+          _getSettingsSection(userDataProvider, context),
         ],
       );
 
-  Widget _getProfileAndCoverPic(UserDataState state, Size size) => SizedBox(
+  Widget _getProfileAndCoverPic(UserData userDataProvider, Size size,
+          ProfileViewModel profileViewModel) =>
+      SizedBox(
         height: 320.0,
         child: Stack(
           children: [
-            state.currentUser.coverPic != null &&
-                    state.currentUser.coverPic.length > 5
+            userDataProvider.currentUser.coverPic != null &&
+                    userDataProvider.currentUser.coverPic.length > 5
                 ? CachedNetworkImage(
-                    imageUrl: Urls.assetsBase + state.currentUser.coverPic,
+                    imageUrl:
+                        Urls.assetsBase + userDataProvider.currentUser.coverPic,
                     fit: BoxFit.fill,
                     height: 260.0,
                     width: double.infinity,
@@ -114,13 +121,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   )
                 : Image.asset(
-              "assets/pictures/girl-cover.jpg",
-              height: 260.0,
-              width: double.infinity,
-              fit: BoxFit.fill,
-              frameBuilder: (context, child, res, re) =>
-                  _buildCoverFrame(child),
-            ),
+                    "assets/pictures/girl-cover.jpg",
+                    height: 260.0,
+                    width: double.infinity,
+                    fit: BoxFit.fill,
+                    frameBuilder: (context, child, res, re) =>
+                        _buildCoverFrame(child),
+                  ),
             Positioned(
               top: 160.0,
               left: (size.width - 150) / 2,
@@ -130,10 +137,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   print("profile picture");
                 },
-                child: state.currentUser.photoUrl != null &&
-                        state.currentUser.photoUrl.length > 5
+                child: userDataProvider.currentUser.photoUrl != null &&
+                        userDataProvider.currentUser.photoUrl.length > 5
                     ? CachedNetworkImage(
-                        imageUrl: Urls.assetsBase + state.currentUser.photoUrl,
+                        imageUrl: Urls.assetsBase +
+                            userDataProvider.currentUser.photoUrl,
                         fit: BoxFit.fill,
                         alignment: Alignment.center,
                         placeholder: (context, data) => Center(
@@ -154,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               top: 275.0,
               right: (size.width - 165) / 2,
               child: InkWell(
-                onTap: () => profileBloc.add(UpdateProfilePicture()),
+                onTap: () => profileViewModel.pickProfilePicture(),
                 child: CameraButton(),
               ),
             ),
@@ -162,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               top: 10.0,
               right: 10.0,
               child: InkWell(
-                onTap: () => profileBloc.add(UpdateCoverPicture()),
+                onTap: () => profileViewModel.pickCoverPicture(),
                 child: CameraButton(),
               ),
             )
@@ -170,28 +178,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
 
-  Widget _getProfileStats(UserDataState state) => Padding(
+  Widget _getProfileStats(UserData userDataProvider) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             StatisticsText(
-              count: "${state.currentUser.posts ?? 0}",
+              count: "${userDataProvider.currentUser.posts ?? 0}",
               text: "Posts",
             ),
             StatisticsText(
-              count: "${state.currentUser.followers ?? 0}",
+              count: "${userDataProvider.currentUser.followers ?? 0}",
               text: "Followers",
             ),
             StatisticsText(
-              count: "${state.currentUser.following ?? 0}",
+              count: "${userDataProvider.currentUser.following ?? 0}",
               text: "Following",
             ),
           ],
         ),
       );
 
-  Widget _getSettingsSection(UserDataState state) => Card(
+  Widget _getSettingsSection(UserData userDataProvider, BuildContext context) =>
+      Card(
         elevation: 0.5,
         margin: const EdgeInsets.all(0.0),
         shape: RoundedRectangleBorder(
@@ -203,8 +212,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ButtonWithIconArrow(
-                onPressed: () =>
-                    pushScreen(EditProfileScreen(user: state.currentUser)),
+                onPressed: () => pushScreen(
+                    EditProfileScreen(
+                        // user: userDataProvider.currentUser
+                    ),
+                    context),
                 icon: FontAwesomeIcons.userAlt,
                 text: 'Edit Profile',
                 color: Colors.indigoAccent,
@@ -248,10 +260,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-  );
+      );
 
-  Widget _frameProfilePicture(context, child, res, rr) =>
-      Material(
+  Widget _frameProfilePicture(context, child, res, rr) => Material(
         color: Colors.white,
         child: child,
         elevation: 4.0,
@@ -259,8 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(8.0),
       );
 
-  Widget _buildCoverFrame(Widget child) =>
-      Material(
+  Widget _buildCoverFrame(Widget child) => Material(
         elevation: 4.0,
         clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.only(
@@ -269,6 +279,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: child,
       );
 
-  void pushScreen(Widget to) =>
+  void pushScreen(Widget to, BuildContext context) =>
       Navigator.of(context).push(AppNavigation.route(to));
 }
