@@ -4,8 +4,11 @@ import 'package:focial/screens/login/login_viewmodel.dart';
 import 'package:focial/screens/profile/edit_profile_viewmodel.dart';
 import 'package:focial/screens/signup/signup_viewmodel.dart';
 import 'package:focial/screens/splash/splash_screen.dart';
+import 'package:focial/screens/stories/new_story_viewmodel.dart';
 import 'package:focial/screens/tabs_screen/tabs_viewmodel.dart';
+import 'package:focial/services/api.dart';
 import 'package:focial/services/auth.dart';
+import 'package:focial/services/story.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/loader.dart';
@@ -21,8 +24,10 @@ void main() {
 }
 
 void setupServices() {
+  GetIt.I.registerSingleton<APIService>(APIService());
   GetIt.I.registerSingleton<AuthService>(AuthService());
   GetIt.I.registerSingleton<UserData>(UserData());
+  GetIt.I.registerSingleton<StoryService>(StoryService());
 }
 
 void disposeServices() {
@@ -58,6 +63,9 @@ class _FocialAppState extends State<FocialApp> {
           create: (_) => UserData(),
         ),
         ChangeNotifierProvider(
+          create: (_) => StoryService(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => LoginViewModel(),
         ),
         ChangeNotifierProvider(
@@ -65,6 +73,9 @@ class _FocialAppState extends State<FocialApp> {
         ),
         ChangeNotifierProvider(
           create: (_) => EditProfileViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NewStoryViewmodel(),
         ),
       ],
       child: OTS(

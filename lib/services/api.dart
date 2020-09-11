@@ -1,5 +1,5 @@
 import 'package:focial/api/api.dart';
 
 class APIService {
-  static final FocialAPI api = FocialAPI.create();
+  final FocialAPI api = FocialAPI.create();
 }

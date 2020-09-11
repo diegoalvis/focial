@@ -11,44 +11,45 @@ class StoryTextStyles {
     _lobster,
     _patrikHand
   ];
+  static const fontSize = 28.0;
 
   static final TextStyle _roboto = TextStyle(
-    fontSize: 32.0,
+    fontSize: fontSize,
     fontWeight: FontWeight.bold,
     color: Colors.black,
     fontFamily: GoogleFonts.roboto().fontFamily,
   );
 
   static final TextStyle _ruluko = TextStyle(
-    fontSize: 32.0,
+    fontSize: fontSize,
     fontWeight: FontWeight.bold,
     color: Colors.black,
     fontFamily: GoogleFonts.ruluko().fontFamily,
   );
 
   static final TextStyle _comforta = TextStyle(
-    fontSize: 32.0,
+    fontSize: fontSize,
     fontWeight: FontWeight.bold,
     color: Colors.black,
     fontFamily: GoogleFonts.comfortaa().fontFamily,
   );
 
   static final TextStyle _merriweather = TextStyle(
-    fontSize: 32.0,
+    fontSize: fontSize,
     fontWeight: FontWeight.bold,
     color: Colors.black,
     fontFamily: GoogleFonts.merriweather().fontFamily,
   );
 
   static final TextStyle _lobster = TextStyle(
-    fontSize: 32.0,
+    fontSize: fontSize,
     fontWeight: FontWeight.bold,
     color: Colors.black,
     fontFamily: GoogleFonts.lobster().fontFamily,
   );
 
   static final TextStyle _patrikHand = TextStyle(
-    fontSize: 32.0,
+    fontSize: fontSize,
     fontWeight: FontWeight.bold,
     color: Colors.black,
     fontFamily: GoogleFonts.patrickHand().fontFamily,

@@ -1,14 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:focial/models/story.dart';
+import 'package:focial/services/story.dart';
 import 'package:focial/utils/gradients.dart';
+import 'package:focial/utils/overlays.dart';
+import 'package:focial/utils/server_responses.dart';
 import 'package:focial/utils/text_styles.dart';
+import 'package:get_it/get_it.dart';
 
 class NewStoryViewmodel extends ChangeNotifier {
   int _currentGradientIndex = 0;
   int _currentTextStyleIndex = 0;
+  BuildContext _context;
 
   bool _textColorWhite = false;
   final textEditingController = TextEditingController();
+
+  void init(BuildContext context) {
+    _context = context;
+  }
 
   void changeGradient() {
     _currentGradientIndex =
@@ -27,14 +36,20 @@ class NewStoryViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void post() {
+  Future<void> post() async {
     Story story = Story(
-      content: textEditingController.text,
+      text: textEditingController.text,
       gradient: _currentGradientIndex,
       textStyle: _currentTextStyleIndex,
-      whiteText: _textColorWhite,
+      colorHex: _textColorWhite ? "ffffff" : "000000",
     );
     print(story);
+    final response = await GetIt.I<StoryService>().newStory(story);
+    if (response.isSuccessful) {
+      Navigator.of(_context).pop();
+    }else{
+      AppOverlays.showError("Server response", ServerResponse.getMessage(response));
+    }
   }
 
   bool get textColorWhite => _textColorWhite;

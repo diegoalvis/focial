@@ -5,40 +5,29 @@ import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/gradients.dart';
 import 'package:focial/utils/text_styles.dart';
 import 'package:focial/widgets/button.dart';
-import 'package:provider/provider.dart';
-
-void main() => runApp(MaterialApp(home: NewStory()));
+import 'package:stacked/stacked.dart';
 
 class NewStory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<NewStoryViewmodel>(context);
-
-    return PlatformScaffold(
-      body: Stack(
-        children: [
-          _gradientBackground(controller),
-          _gradientChangeButton(controller),
-          _changeTextStyleButton(controller),
-          _toggleColorButton(controller),
-          _postStoryButton(controller),
-          _textField(controller, context),
-        ],
+    return ViewModelBuilder<NewStoryViewmodel>.reactive(
+      viewModelBuilder: () => NewStoryViewmodel(),
+      onModelReady: (m) => m.init(context),
+      builder: (context, controller, child) => PlatformScaffold(
+        body: Stack(
+          children: [
+            // _gradientBackground(controller),
+            GradientBackground(index: controller.currentGradientIndex),
+            _gradientChangeButton(controller),
+            _changeTextStyleButton(controller),
+            _toggleColorButton(controller),
+            _postStoryButton(controller),
+            _textField(controller, context),
+          ],
+        ),
       ),
     );
   }
-
-  Widget _gradientBackground(NewStoryViewmodel controller) => Positioned.fill(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: Gradients.gradients[controller.currentGradientIndex],
-            ),
-          ),
-        ),
-      );
 
   Widget _gradientChangeButton(NewStoryViewmodel controller) => Positioned(
         bottom: 26.0,
@@ -98,38 +87,59 @@ class NewStory extends StatelessWidget {
         ),
       );
 
-  Widget _textField(NewStoryViewmodel controller, BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 16.0),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller.textEditingController,
-                    autofocus: true,
-                    textAlign: TextAlign.center,
-                    cursorColor: Colors.white,
-                    maxLength: 160,
-                    maxLines: null,
-                    expands: true,
-                    style: StoryTextStyles.styles[controller.currentTextStyleIndex]
-                        .apply(
-                            color: controller.textColorWhite
-                                ? Colors.white
-                                : Colors.black),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      counter: SizedBox(),
-                    ),
-                  ),
+  Widget _textField(NewStoryViewmodel controller, BuildContext context) =>
+      Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: 50.0,
+            maxHeight: 350.0,
+          ),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16.0),
+            child: Center(
+              child: TextFormField(
+                scrollPhysics: NeverScrollableScrollPhysics(),
+                controller: controller.textEditingController,
+                autofocus: true,
+                textAlign: TextAlign.center,
+                cursorColor: Colors.white,
+                maxLength: 160,
+                expands: true,
+                maxLines: null,
+                style: StoryTextStyles.styles[controller.currentTextStyleIndex]
+                    .apply(
+                        color: controller.textColorWhite
+                            ? Colors.white
+                            : Colors.black),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  counter: SizedBox(),
                 ),
-              ],
+              ),
             ),
           ),
         ),
       );
+}
+
+class GradientBackground extends StatelessWidget {
+  final int index;
+
+  const GradientBackground({Key key, this.index}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: Gradients.gradients[index],
+          ),
+        ),
+      ),
+    );
+  }
 }

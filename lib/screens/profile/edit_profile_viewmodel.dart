@@ -98,7 +98,7 @@ class EditProfileViewModel extends ChangeNotifier {
         print("sending to server");
         // adding loading status
         status = Status.Loading;
-        final available = await APIService.api.checkUsername(username);
+        final available = await GetIt.I<APIService>().api.checkUsername(username);
         if (available.isSuccessful) {
           // sending username available status
           _usernameChecked = true;

@@ -8,16 +8,21 @@ part of 'story.dart';
 
 Story _$StoryFromJson(Map<String, dynamic> json) {
   return Story(
-    content: json['content'] as String,
+    text: json['text'] as String,
     gradient: json['gradient'] as int,
     textStyle: json['textStyle'] as int,
-    whiteText: json['whiteText'] as bool,
-  );
+    colorHex: json['colorHex'] as String,
+    views: (json['views'] as List)
+        ?.map((e) => StoryView.fromJson(e as Map<String, dynamic>))
+        ?.toList() ?? [],
+  )..storyId = json['storyId'] as String;
 }
 
 Map<String, dynamic> _$StoryToJson(Story instance) => <String, dynamic>{
-      'content': instance.content,
+      'storyId': instance.storyId,
+      'text': instance.text,
       'gradient': instance.gradient,
       'textStyle': instance.textStyle,
-      'whiteText': instance.whiteText,
+      'colorHex': instance.colorHex,
+      'views': instance.views,
     };

@@ -38,6 +38,12 @@ abstract class FocialAPI extends ChopperService {
   @multipart
   Future<Response> uploadCoverPicture(@PartFile("file") String file);
 
+  @Get(path: Urls.STORY)
+  Future<Response<dynamic>> getStoryFeed();
+
+  @Post(path: Urls.STORY)
+  Future<Response<dynamic>> newStory(@body Map<String, dynamic> body);
+
   static FocialAPI create() {
     final client = ChopperClient(
         baseUrl: Urls.BASE_URL,
@@ -57,7 +63,7 @@ class HeadersInterceptor extends RequestInterceptor {
       "Content-Type": "application/json",
     };
 
-    // print(auth.authData.accessToken);
+    print(auth.authData.accessToken);
     // print(request.body);
     headers.addAll({
       HttpHeaders.authorizationHeader: "Bearer ${auth.authData.accessToken}"

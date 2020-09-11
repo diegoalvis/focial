@@ -76,4 +76,19 @@ class _$FocialAPI extends FocialAPI {
         Request('POST', $url, client.baseUrl, parts: $parts, multipart: true);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> getStoryFeed() {
+    final $url = 'story';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> newStory(Map<String, dynamic> body) {
+    final $url = 'story';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
 }
