@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focial/screens/signup/signup_controller.dart';
+import 'package:focial/screens/signup/signup_viewmodel.dart';
 import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/strings.dart';
 import 'package:focial/utils/theme.dart';
@@ -8,27 +7,19 @@ import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/stackinflow.dart';
 import 'package:focial/widgets/text_fields.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stacked/stacked.dart';
 
-class SignUpScreen extends StatefulWidget {
-  @override
-  _SignUpScreenState createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final controller = SignupBloc();
-
-  @override
-  void dispose() {
-    controller.close();
-    super.dispose();
-  }
-
+class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
       backgroundColor: AppTheme.backgroundColor,
-      body: _getBody(),
+      body: ViewModelBuilder<SignUpViewModel>.reactive(
+        viewModelBuilder: () => SignUpViewModel(),
+        onModelReady: (m) => m.init(context),
+        builder: (context, model, child) => _getBody(model, context),
+      ),
       bottomNavigationBar: StackInFlow(),
     );
   }
@@ -40,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       );
 
-  Widget _getBody() => SafeArea(
+  Widget _getBody(SignUpViewModel controller, BuildContext context) => SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
@@ -54,81 +45,74 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: 8.0),
-            _getForm(),
-            _getButtons(),
+            _getForm(controller, context),
+            _getButtons(controller, context),
             SizedBox(height: 8.0),
-            _getSocialMediaButtons(),
+            _getSocialMediaButtons(controller),
           ],
         ),
       );
 
-  Widget _getForm() =>
-      BlocBuilder<SignupBloc, SignupState>(
-        buildWhen: (prev, curr) => prev.passwordShown != curr.passwordShown,
-        cubit: controller,
-        builder: (context, state) =>
-            Card(
-              elevation: 8.0,
-              margin: const EdgeInsets.all(8.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Form(
-                  key: controller.formKey,
-                  child: Column(
-                    children: [
-                      OutlineBorderedTFWithIcon(
-                        label: 'Full name',
-                        hint: 'John Doe',
-                        icon: FontAwesomeIcons.user,
-                        validateLength: 3,
-                        save: controller.saveName,
-                      ),
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      OutlineBorderedTFWithIcon(
-                        label: 'Email',
-                        hint: 'john@doe.com',
-                        icon: Icons.mail_outline,
-                        iconSize: 24.0,
-                        validator: controller.validateEmail,
-                        save: controller.saveEmail,
-                      ),
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlineBorderedTFWithIcon(
-                              label: 'Password',
-                              hint: '***************',
-                              icon: FontAwesomeIcons.unlockAlt,
-                              validator: controller.validatePassword,
-                              isObscure: state.passwordShown,
-                              save: controller.savePassword,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(state.passwordShown
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () =>
-                                controller.add(TogglePasswordVisibility()),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+  Widget _getForm(SignUpViewModel controller, BuildContext context) => Card(
+        elevation: 8.0,
+        margin: const EdgeInsets.all(8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              children: [
+                OutlineBorderedTFWithIcon(
+                  label: 'Full name',
+                  hint: 'John Doe',
+                  icon: FontAwesomeIcons.user,
+                  validateLength: 3,
+                  save: controller.saveName,
                 ),
-              ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                OutlineBorderedTFWithIcon(
+                  label: 'Email',
+                  hint: 'john@doe.com',
+                  icon: Icons.mail_outline,
+                  iconSize: 24.0,
+                  validator: controller.validateEmail,
+                  save: controller.saveEmail,
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlineBorderedTFWithIcon(
+                        label: 'Password',
+                        hint: '***************',
+                        icon: FontAwesomeIcons.unlockAlt,
+                        validator: controller.validatePassword,
+                        isObscure: controller.passwordShown,
+                        save: controller.savePassword,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(controller.passwordShown
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: controller.togglePasswordVisibility,
+                    ),
+                  ],
+                )
+              ],
             ),
+          ),
+        ),
       );
 
-  Widget _getButtons() =>
+  Widget _getButtons(SignUpViewModel controller, BuildContext context) =>
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -138,7 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: AppPlatformButtonWithArrow(
-              onPressed: () => controller.add(ValidateFormAndSignup(context)),
+              onPressed: () => controller.validateAndRegister(context),
               text: 'SIGNUP',
             ),
           ),
@@ -179,7 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       );
 
-  Widget _getSocialMediaButtons() {
+  Widget _getSocialMediaButtons(SignUpViewModel controller) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -5,6 +5,7 @@ import 'package:focial/models/auth.dart';
 import 'package:focial/services/api.dart';
 import 'package:focial/services/shared_prefs.dart';
 import 'package:focial/utils/server_responses.dart';
+import 'package:get_it/get_it.dart';
 
 enum AuthState { LoggedIn, LoggedOut }
 
@@ -36,7 +37,7 @@ class AuthService {
 
   Future<Response> register(
       {String name, String email, String password}) async {
-    final response = await APIService.api.register(
+    final response = await GetIt.I<APIService>().api.register(
       name: name,
       email: email,
       password: password,
@@ -45,7 +46,7 @@ class AuthService {
   }
 
   Future<Response> login({String email, String password}) async {
-    final response = await APIService.api.login(
+    final response = await GetIt.I<APIService>().api.login(
       email: email,
       password: password,
     );

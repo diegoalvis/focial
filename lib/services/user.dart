@@ -1,94 +1,105 @@
-import 'package:bloc/bloc.dart';
 import 'package:chopper/chopper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:focial/models/user.dart';
 import 'package:focial/services/api.dart';
 import 'package:focial/utils/overlays.dart';
+import 'package:get_it/get_it.dart';
 import 'package:ots/ots.dart';
 
 enum Status { Idle, Loading, Loaded, Error }
 
-class UserDataState {
-  User currentUser = User();
-  Status status;
+class UserData extends ChangeNotifier {
+  User _currentUser = User();
+  Status _status = Status.Idle;
 
-  UserDataState({this.currentUser, this.status = Status.Idle});
-}
-
-class UserData extends Cubit<UserDataState> {
-  UserData() : super(UserDataState(currentUser: User()));
+  void init() {
+    if (_currentUser != null &&
+        _currentUser.firstName != null &&
+        _currentUser.email != null) {
+      status = Status.Loaded;
+    }
+  }
 
   Future<void> fetchUser() async {
-    if (state.status == Status.Loading || state.status == Status.Loaded) return;
-    final response = await APIService.api.getUser();
-    emit(UserDataState(status: Status.Loading));
+    if (status == Status.Loading || status == Status.Loaded) return;
+    status = Status.Loading;
+    final response = await GetIt.I<APIService>().api.getUser();
     if (response.isSuccessful) {
-      emit(
-        UserDataState(
-          currentUser: User.fromJson(response.body["user"]),
-          status: Status.Loaded,
-        ),
-      );
+      _currentUser = User.fromJson(response.body["user"]);
+      _status = Status.Loaded;
+      notifyListeners();
     } else {
       debugPrint("User data can't be loaded ${response.error}");
-      emit(UserDataState(status: Status.Error));
+      status = Status.Error;
     }
   }
 
   Future<Response> updateUserProfile(User user) async {
-    emit(UserDataState(currentUser: user, status: Status.Loading));
-    final response = await APIService.api.updateUser(user.toJson());
+    _currentUser = user;
+    _status = Status.Loading;
+    notifyListeners();
+    final response = await GetIt.I<APIService>().api.updateUser(user.toJson());
     if (response.isSuccessful) {
-      emit(UserDataState(currentUser: user, status: Status.Loaded));
+      _status = Status.Loaded;
+      notifyListeners();
     }
     return response;
   }
 
   Future<void> updateProfilePicture(String filePath) async {
     showLoader(isModal: true);
-    final response = await APIService.api.uploadProfilePicture(filePath);
-    emit(UserDataState(status: Status.Loading, currentUser: state.currentUser));
+    status = Status.Loading;
+    final response = await GetIt.I<APIService>().api.uploadProfilePicture(filePath);
+
     if (response.isSuccessful) {
       _updatePhotoUrl(response.body["photoUrl"]);
       AppOverlays.showSuccess("Server response", "Profile picture uploaded");
     } else {
       AppOverlays.showError(
           "Server response", 'Unable to update user picture, please try later');
-      emit(
-          UserDataState(status: Status.Loaded, currentUser: state.currentUser));
+      status = Status.Loaded;
     }
     hideLoader();
   }
 
   Future<void> updateCoverPicture(String filePath) async {
     showLoader(isModal: true);
-    final response = await APIService.api.uploadCoverPicture(filePath);
-    emit(UserDataState(status: Status.Loading, currentUser: state.currentUser));
+    status = Status.Loading;
+    final response = await GetIt.I<APIService>().api.uploadCoverPicture(filePath);
     if (response.isSuccessful) {
       _updateCoverPic(response.body["photoUrl"]);
       AppOverlays.showSuccess("Server response", "Cover picture uploaded");
     } else {
       AppOverlays.showError(
           "Server response", 'Unable to update user picture, please try later');
-      emit(
-          UserDataState(status: Status.Loaded, currentUser: state.currentUser));
+      status = Status.Loaded;
     }
     hideLoader();
   }
 
   void _updatePhotoUrl(String photoUrl) {
-    state.currentUser.photoUrl = photoUrl;
-    emit(UserDataState(
-      status: Status.Loaded,
-      currentUser: state.currentUser,
-    ));
+    _currentUser.photoUrl = photoUrl;
+    _status = Status.Loaded;
+    notifyListeners();
   }
 
   void _updateCoverPic(String photoUrl) {
-    state.currentUser.coverPic = photoUrl;
-    emit(UserDataState(
-      status: Status.Loaded,
-      currentUser: state.currentUser,
-    ));
+    _currentUser.coverPic = photoUrl;
+    _status = Status.Loaded;
+    notifyListeners();
+  }
+
+  Status get status => _status;
+
+  set status(Status value) {
+    _status = value;
+    notifyListeners();
+  }
+
+  User get currentUser => _currentUser;
+
+  set currentUser(User value) {
+    _currentUser = value;
+    notifyListeners();
   }
 }

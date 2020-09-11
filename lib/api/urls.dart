@@ -19,4 +19,6 @@ class Urls {
   static const String CHECK_USERNAME = "user/check/";
   static const String UPLOAD_PROFILE_PICTURE = "user/pp";
   static const String UPLOAD_COVER_PICTURE = "user/cover";
+
+  static const String STORY = "story";
 }
