@@ -24,6 +24,7 @@ class ProfileScreen extends StatelessWidget {
       body: ViewModelBuilder<ProfileViewModel>.reactive(
         viewModelBuilder: () => ProfileViewModel(),
         onModelReady: (m) => m.init(context),
+        disposeViewModel: false,
         builder: (context, model, child) {
           return _profileModel(model, size, context);
         },
@@ -31,11 +32,13 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // todo: to be optimized
   Widget _profileModel(
       ProfileViewModel profileViewModel, Size size, BuildContext context) {
     return ViewModelBuilder<UserData>.reactive(
       viewModelBuilder: () => GetIt.I<UserData>(),
       onModelReady: (m) => m.init(),
+      disposeViewModel: false,
       builder: (context, userData, child) =>
           _body(userData, size, context, profileViewModel),
     );
