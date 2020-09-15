@@ -41,17 +41,7 @@ void setupLogging() {
   });
 }
 
-class FocialApp extends StatefulWidget {
-  @override
-  _FocialAppState createState() => _FocialAppState();
-}
-
-class _FocialAppState extends State<FocialApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class FocialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -91,10 +81,5 @@ class _FocialAppState extends State<FocialApp> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
