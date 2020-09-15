@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:focial/api/urls.dart';
 import 'package:focial/screens/stories/new_story.dart';
 import 'package:focial/screens/stories/view_story.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/story.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/services/user_data.dart';
-import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
 class FocialStories extends StatelessWidget {
   void handleCurrentUserStory(BuildContext context, StoryService provider) {
-    final currentUser = GetIt.I<UserData>().currentUser;
+    final currentUser = find<UserData>().currentUser;
     if (provider.storyFeed[currentUser.id] != null) {
       if (provider.storyFeed[currentUser.id].stories.length > 0) {
         print("show him his stories");
@@ -30,7 +30,7 @@ class FocialStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<StoryService>.reactive(
-      viewModelBuilder: () => GetIt.I<StoryService>(),
+      viewModelBuilder: () => find<StoryService>(),
       disposeViewModel: false,
       onModelReady: (m) => {},
       builder: (context, provider, child) {

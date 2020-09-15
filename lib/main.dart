@@ -8,12 +8,12 @@ import 'package:focial/screens/stories/new_story_viewmodel.dart';
 import 'package:focial/screens/tabs_screen/tabs_viewmodel.dart';
 import 'package:focial/services/api.dart';
 import 'package:focial/services/auth.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/post.dart';
 import 'package:focial/services/story.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/loader.dart';
-import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:ots/ots.dart';
 import 'package:provider/provider.dart';
@@ -25,15 +25,15 @@ void main() {
 }
 
 void setupServices() {
-  GetIt.I.registerSingleton<APIService>(APIService());
-  GetIt.I.registerSingleton<AuthService>(AuthService());
-  GetIt.I.registerSingleton<UserData>(UserData());
-  GetIt.I.registerSingleton<StoryService>(StoryService());
-  GetIt.I.registerSingleton<FocialPostService>(FocialPostService());
+  find.registerSingleton<APIService>(APIService());
+  find.registerSingleton<AuthService>(AuthService());
+  find.registerSingleton<UserData>(UserData());
+  find.registerSingleton<StoryService>(StoryService());
+  find.registerSingleton<FocialPostService>(FocialPostService());
 }
 
 void disposeServices() {
-  GetIt.I<AuthService>().dispose();
+  find<AuthService>().dispose();
 }
 
 void setupLogging() {

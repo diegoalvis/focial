@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/user.dart';
-import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
 class UserDataWidget extends StatelessWidget {
@@ -12,7 +12,7 @@ class UserDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UserData>.reactive(
-      viewModelBuilder: () => GetIt.I<UserData>(),
+      viewModelBuilder: () => find<UserData>(),
       disposeViewModel: false,
       staticChild: child,
       builder: builder,

@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:focial/screens/tabs_screen/tabs_screen.dart';
 import 'package:focial/services/auth.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/overlays.dart';
 import 'package:focial/utils/server_responses.dart';
 import 'package:focial/utils/validators.dart';
-import 'package:get_it/get_it.dart';
 import 'package:ots/ots.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  final authService = GetIt.I<AuthService>();
+  final authService = find<AuthService>();
   final formKey = GlobalKey<FormState>();
   String email, password;
   bool _passwordShown = false;
@@ -35,7 +35,7 @@ class LoginViewModel extends ChangeNotifier {
     final response = await authService.login(email: email, password: password);
     if (response.isSuccessful) {
       // AppOverlays.showSuccess("Server response", "Login Successful");
-      GetIt.I<UserData>()..fetchUser();
+      find<UserData>()..fetchUser();
       Navigator.of(context).push(AppNavigation.route(TabsScreen()));
     } else {
       AppOverlays.showError(

@@ -2,8 +2,8 @@ import 'package:chopper/chopper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:focial/models/user.dart';
 import 'package:focial/services/api.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/utils/overlays.dart';
-import 'package:get_it/get_it.dart';
 import 'package:ots/ots.dart';
 
 enum Status { Idle, Loading, Loaded, Error }
@@ -23,7 +23,7 @@ class UserData extends ChangeNotifier {
   Future<void> fetchUser() async {
     if (status == Status.Loading || status == Status.Loaded) return;
     status = Status.Loading;
-    final response = await GetIt.I<APIService>().api.getUser();
+    final response = await find<APIService>().api.getUser();
     if (response.isSuccessful) {
       _currentUser = User.fromJson(response.body["user"]);
       _status = Status.Loaded;
@@ -38,7 +38,7 @@ class UserData extends ChangeNotifier {
     _currentUser = user;
     _status = Status.Loading;
     notifyListeners();
-    final response = await GetIt.I<APIService>().api.updateUser(user.toJson());
+    final response = await find<APIService>().api.updateUser(user.toJson());
     if (response.isSuccessful) {
       _status = Status.Loaded;
       notifyListeners();
@@ -49,7 +49,8 @@ class UserData extends ChangeNotifier {
   Future<void> updateProfilePicture(String filePath) async {
     showLoader(isModal: true);
     status = Status.Loading;
-    final response = await GetIt.I<APIService>().api.uploadProfilePicture(filePath);
+    final response =
+        await find<APIService>().api.uploadProfilePicture(filePath);
 
     if (response.isSuccessful) {
       _updatePhotoUrl(response.body["photoUrl"]);
@@ -65,7 +66,7 @@ class UserData extends ChangeNotifier {
   Future<void> updateCoverPicture(String filePath) async {
     showLoader(isModal: true);
     status = Status.Loading;
-    final response = await GetIt.I<APIService>().api.uploadCoverPicture(filePath);
+    final response = await find<APIService>().api.uploadCoverPicture(filePath);
     if (response.isSuccessful) {
       _updateCoverPic(response.body["photoUrl"]);
       AppOverlays.showSuccess("Server response", "Cover picture uploaded");

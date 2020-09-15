@@ -4,8 +4,8 @@ import 'package:focial/models/author_data.dart';
 import 'package:focial/models/story.dart';
 import 'package:focial/models/story_feed.dart';
 import 'package:focial/services/api.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/user.dart';
-import 'package:get_it/get_it.dart';
 
 class StoryService extends ChangeNotifier {
   // userId, StoryFeed(userData, stories)
@@ -13,7 +13,7 @@ class StoryService extends ChangeNotifier {
   Status _status = Status.Idle;
 
   Future<void> getStatuses() async {
-    final response = await GetIt.I<APIService>().api.getStoryFeed();
+    final response = await find<APIService>().api.getStoryFeed();
     if (response.isSuccessful) {
       final storyFeed = response.body["storyFeed"];
       _storyFeed.addAll(StoryFeed.parseFromJSONAsList(storyFeed));
@@ -23,8 +23,8 @@ class StoryService extends ChangeNotifier {
   }
 
   Future<Response> newStory(Story story) async {
-    final currentUser = GetIt.I<UserData>().currentUser;
-    final response = await GetIt.I<APIService>().api.newStory(story.toJson());
+    final currentUser = find<UserData>().currentUser;
+    final response = await find<APIService>().api.newStory(story.toJson());
 
     story.views = [];
     if (response.isSuccessful) {

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/post.dart';
-import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
 class FocialPosts extends StatelessWidget {
@@ -12,7 +12,7 @@ class FocialPosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-      viewModelBuilder: () => GetIt.I<FocialPostService>(),
+      viewModelBuilder: () => find<FocialPostService>(),
       disposeViewModel: false,
       onModelReady: (m) => {},
       staticChild: child,

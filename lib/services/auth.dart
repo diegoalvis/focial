@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:chopper/chopper.dart' show Response;
 import 'package:focial/models/auth.dart';
 import 'package:focial/services/api.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/shared_prefs.dart';
 import 'package:focial/utils/server_responses.dart';
-import 'package:get_it/get_it.dart';
 
 enum AuthState { LoggedIn, LoggedOut }
 
@@ -37,16 +37,16 @@ class AuthService {
 
   Future<Response> register(
       {String name, String email, String password}) async {
-    final response = await GetIt.I<APIService>().api.register(
-      name: name,
-      email: email,
-      password: password,
-    );
+    final response = await find<APIService>().api.register(
+          name: name,
+          email: email,
+          password: password,
+        );
     return response;
   }
 
   Future<Response> login({String email, String password}) async {
-    final response = await GetIt.I<APIService>().api.login(
+    final response = await find<APIService>().api.login(
       email: email,
       password: password,
     );

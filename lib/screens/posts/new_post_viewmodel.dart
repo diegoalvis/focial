@@ -10,10 +10,10 @@ import 'package:flutter/material.dart'
         TextEditingController;
 import 'package:focial/models/post.dart';
 import 'package:focial/services/api.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/post.dart';
 import 'package:focial/utils/overlays.dart';
 import 'package:focial/utils/theme.dart';
-import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ots/ots.dart';
@@ -47,7 +47,7 @@ class NewPostViewModel extends ChangeNotifier {
       FocusScope.of(_context).requestFocus(FocusNode());
       captionError = null;
       showLoader();
-      final response = await GetIt.I<FocialPostService>()
+      final response = await find<FocialPostService>()
           .newPost(FocialPost(caption: captionController.text, images: images));
       if (response.isSuccessful) {
         Navigator.of(_context).pop();
@@ -81,7 +81,7 @@ class NewPostViewModel extends ChangeNotifier {
       if (croppedFile != null) {
         showLoader();
         final response =
-            await GetIt.I<APIService>().api.uploadPostImage(croppedFile.path);
+            await find<APIService>().api.uploadPostImage(croppedFile.path);
         hideLoader();
         if (response.isSuccessful) {
           _images.add(response.body["url"]);

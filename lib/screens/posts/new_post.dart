@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:focial/screens/posts/new_post_viewmodel.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/helpers.dart';
-import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
 class NewPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentUser = GetIt.I<UserData>().currentUser;
+    final currentUser = find<UserData>().currentUser;
 
     return ViewModelBuilder<NewPostViewModel>.reactive(
       viewModelBuilder: () => NewPostViewModel(),
