@@ -8,11 +8,7 @@ part of 'story_feed.dart';
 
 StoryFeed _$StoryFeedFromJson(Map<String, dynamic> json) {
   return StoryFeed(
-    authorData: AuthorData.fromJson({
-      "id": json["_id"],
-      "username": json["username"],
-      "photoUrl": json["photoUrl"]
-    }),
+    authorData: AuthorData.fromJson(json['authorData'] as Map<String, dynamic>),
     stories: (json['stories'] as List)
         .map((e) => Story.fromJson(e as Map<String, dynamic>))
         .toList(),

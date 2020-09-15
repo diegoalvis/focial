@@ -9,9 +9,9 @@ import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:focial/widgets/button.dart';
 import 'package:focial/widgets/loader.dart';
+import 'package:focial/widgets/services/user_data.dart';
 import 'package:focial/widgets/stackinflow.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 
@@ -35,10 +35,7 @@ class ProfileScreen extends StatelessWidget {
   // todo: to be optimized
   Widget _profileModel(
       ProfileViewModel profileViewModel, Size size, BuildContext context) {
-    return ViewModelBuilder<UserData>.reactive(
-      viewModelBuilder: () => GetIt.I<UserData>(),
-      onModelReady: (m) => m.init(),
-      disposeViewModel: false,
+    return UserDataWidget(
       builder: (context, userData, child) =>
           _body(userData, size, context, profileViewModel),
     );

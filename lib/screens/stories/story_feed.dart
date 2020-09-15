@@ -1,20 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:focial/api/urls.dart';
-import 'package:focial/models/user.dart';
 import 'package:focial/screens/stories/new_story.dart';
 import 'package:focial/screens/stories/view_story.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/story.dart';
 import 'package:focial/services/user.dart';
+import 'package:focial/utils/assets.dart';
 import 'package:focial/utils/navigation.dart';
 import 'package:focial/utils/theme.dart';
-import 'package:get_it/get_it.dart';
+import 'package:focial/widgets/services/user_data.dart';
 import 'package:stacked/stacked.dart';
 
 class FocialStories extends StatelessWidget {
-  User get currentUser => GetIt.I<UserData>().currentUser;
-
   void handleCurrentUserStory(BuildContext context, StoryService provider) {
+    final currentUser = find<UserData>().currentUser;
     if (provider.storyFeed[currentUser.id] != null) {
       if (provider.storyFeed[currentUser.id].stories.length > 0) {
         print("show him his stories");
@@ -30,16 +30,14 @@ class FocialStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<StoryService>.reactive(
-      viewModelBuilder: () => GetIt.I<StoryService>(),
+      viewModelBuilder: () => find<StoryService>(),
       disposeViewModel: false,
       onModelReady: (m) => {},
       builder: (context, provider, child) {
         var stories = [
           GestureDetector(
-            child: ViewStoryButton(
+            child: CurrentUserStoryButton(
               loading: false,
-              currentUser: true,
-              avatar: currentUser.photoUrl,
             ),
             onTap: () => handleCurrentUserStory(context, provider),
           ),
@@ -69,13 +67,11 @@ class ViewStoryButton extends StatelessWidget {
   final whiteBackgroundPadding = 3.0;
   final String avatar;
 
-  const ViewStoryButton(
-      {Key key,
-      this.loading = false,
-      this.seen = false,
-      this.currentUser = false,
-      this.avatar =
-          "https://avatars3.githubusercontent.com/u/35001172?s=460&u=ed19790a0421a2e296d2e1faac50e40468669896&v=4"})
+  const ViewStoryButton({Key key,
+    this.loading = false,
+    this.seen = false,
+    this.currentUser = false,
+    this.avatar = Assets.DEFAULT_PROFILE_PICTURE})
       : super(key: key);
 
   @override
@@ -127,11 +123,13 @@ class ViewStoryButton extends StatelessWidget {
             child: CircleAvatar(
               radius: storySize,
               backgroundColor: Colors.white10,
-              backgroundImage: CachedNetworkImageProvider(avatar == null
-                  ? "https://avatars3.githubusercontent.com/u/35001172?s=460&u=ed19790a0421a2e296d2e1faac50e40468669896&v=4"
-                  : avatar.contains("http")
-                      ? avatar
-                      : Urls.assetsBase + avatar),
+              backgroundImage: CachedNetworkImageProvider(
+                avatar == null
+                    ? Assets.DEFAULT_PROFILE_PICTURE
+                    : avatar.contains("http")
+                    ? avatar
+                    : Urls.assetsBase + avatar,
+              ),
             ),
           ),
           currentUser
@@ -150,10 +148,30 @@ class ViewStoryButton extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
+          )
               : SizedBox()
         ],
       ),
     );
   }
 }
+
+class CurrentUserStoryButton extends StatelessWidget {
+  final bool loading;
+
+  CurrentUserStoryButton({this.loading = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return UserDataWidget(
+      builder: (context, model, child) =>
+          ViewStoryButton(
+            loading: loading,
+            currentUser: true,
+            avatar: model.currentUser.photoUrl,
+          ),
+    );
+  }
+}
+
+

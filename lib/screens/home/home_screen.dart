@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return ListView(
       children: [
         // New post & search button
-        _newPostAndSearchButton(),
+        _newPostAndSearchButton(model),
         // stories
         FocialStories(),
         SizedBox(height: 4.0),
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _newPostAndSearchButton() {
+  Widget _newPostAndSearchButton(HomeViewModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Row(
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.grey,
               size: 20.0,
             ),
-            onPressed: () {},
+            onPressed: model.newPost,
           ),
           Spacer(),
           IconButton(

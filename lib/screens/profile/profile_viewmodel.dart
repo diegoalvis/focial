@@ -1,8 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/theme.dart';
-import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -10,7 +11,7 @@ class ProfileViewModel extends ChangeNotifier {
   BuildContext _context;
   var pp;
   var cp;
-  final userData = GetIt.I<UserData>()..fetchUser();
+  final userData = find<UserData>();
   Status status = Status.Loaded;
 
   void pickProfilePicture() async {

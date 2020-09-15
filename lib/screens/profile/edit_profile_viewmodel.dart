@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:focial/models/user.dart';
 import 'package:focial/services/api.dart';
+import 'package:focial/services/finder.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/overlays.dart';
-import 'package:get_it/get_it.dart';
 import 'package:ots/ots.dart';
 
 final usernameRegex = RegExp('^[a-z][a-z0-9_]{3,15}');
@@ -21,15 +21,15 @@ class EditProfileViewModel extends ChangeNotifier {
 
   void init(BuildContext context) {
     _context = context;
-    print(GetIt.I<UserData>().currentUser);
-    currentUser = GetIt.I<UserData>().currentUser;
+    // print(find<UserData>().currentUser);
+    currentUser = find<UserData>().currentUser;
   }
 
   final formKey = GlobalKey<FormState>();
 
   void updateUserProfile(BuildContext context) async {
     showLoader(isModal: true);
-    final response = await GetIt.I<UserData>().updateUserProfile(currentUser);
+    final response = await find<UserData>().updateUserProfile(currentUser);
     hideLoader();
     if (response.isSuccessful) {
       Navigator.of(context).pop();
@@ -98,7 +98,7 @@ class EditProfileViewModel extends ChangeNotifier {
         print("sending to server");
         // adding loading status
         status = Status.Loading;
-        final available = await GetIt.I<APIService>().api.checkUsername(username);
+        final available = await find<APIService>().api.checkUsername(username);
         if (available.isSuccessful) {
           // sending username available status
           _usernameChecked = true;

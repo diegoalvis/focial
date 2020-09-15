@@ -91,4 +91,21 @@ class _$FocialAPI extends FocialAPI {
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> newPost(Map<String, dynamic> body) {
+    final $url = 'post';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> uploadPostImage(String file) {
+    final $url = 'post/image';
+    final $parts = <PartValue>[PartValueFile<String>('file', file)];
+    final $request =
+        Request('POST', $url, client.baseUrl, parts: $parts, multipart: true);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

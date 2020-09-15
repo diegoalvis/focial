@@ -8,4 +8,7 @@ class Assets {
   static const COLOR_WHEEL = _root + "color-wheel.png";
   static const TEXT = _root + "text.png";
   static const TEXT_COLOR = _root + "text-color.png";
+
+  static const DEFAULT_PROFILE_PICTURE =
+      "https://i.pinimg.com/originals/ec/61/d3/ec61d3114cc5269485d508244f531bdf.png";
 }
