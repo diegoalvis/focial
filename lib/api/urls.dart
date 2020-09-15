@@ -1,7 +1,7 @@
 class Urls {
-  static const BASE_URL = "https://focial1.herokuapp.com/api/v1";
+  // static const BASE_URL = "https://focial1.herokuapp.com/api/v1";
 
-  // static const BASE_URL = "http://10.0.2.2:7000/api/v1";
+  static const BASE_URL = "http://10.0.2.2:7000/api/v1";
 
   static final assetsBase = BASE_URL.replaceAll("api/v1", "");
 
@@ -21,4 +21,6 @@ class Urls {
   static const String UPLOAD_COVER_PICTURE = "user/cover";
 
   static const String STORY = "story";
+  static const String POST = "post";
+  static const String POST_IMAGE_UPLOAD = "post/image";
 }

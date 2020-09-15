@@ -13,8 +13,8 @@ Story _$StoryFromJson(Map<String, dynamic> json) {
     textStyle: json['textStyle'] as int,
     colorHex: json['colorHex'] as String,
     views: (json['views'] as List)
-        ?.map((e) => StoryView.fromJson(e as Map<String, dynamic>))
-        ?.toList() ?? [],
+        .map((e) => StoryView.fromJson(e as Map<String, dynamic>))
+        .toList(),
   )..storyId = json['storyId'] as String;
 }
 

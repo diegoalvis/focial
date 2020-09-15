@@ -8,6 +8,7 @@ import 'package:focial/screens/stories/new_story_viewmodel.dart';
 import 'package:focial/screens/tabs_screen/tabs_viewmodel.dart';
 import 'package:focial/services/api.dart';
 import 'package:focial/services/auth.dart';
+import 'package:focial/services/post.dart';
 import 'package:focial/services/story.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/theme.dart';
@@ -28,6 +29,7 @@ void setupServices() {
   GetIt.I.registerSingleton<AuthService>(AuthService());
   GetIt.I.registerSingleton<UserData>(UserData());
   GetIt.I.registerSingleton<StoryService>(StoryService());
+  GetIt.I.registerSingleton<FocialPostService>(FocialPostService());
 }
 
 void disposeServices() {
