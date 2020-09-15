@@ -11,6 +11,7 @@ class Urls {
   static const String FCM_ID = "auth/fcm/token";
   static const String FACEBOOK_AUTH = "auth/fb";
   static const String GOOGLE_AUTH = "auth/google";
+  static const String RESEND_ACC_VERIFICATION_LINK = "auth/token/resend";
 
   /// Refresh token
   static const String TOKEN = "auth/token";

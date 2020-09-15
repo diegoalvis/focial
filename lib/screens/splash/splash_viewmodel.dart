@@ -2,10 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:focial/screens/login/login_screen.dart';
 import 'package:focial/screens/tabs_screen/tabs_screen.dart';
+import 'package:focial/services/app_data.dart';
 import 'package:focial/services/auth.dart';
 import 'package:focial/services/finder.dart';
-import 'package:focial/services/story.dart';
-import 'package:focial/services/user.dart';
 import 'package:focial/utils/navigation.dart';
 
 class SplashViewModel extends ChangeNotifier {
@@ -28,8 +27,7 @@ class SplashViewModel extends ChangeNotifier {
   void loggedIn(BuildContext context) {
     print("loggedIn");
     // fetch userData in background
-    find<UserData>()..fetchUser();
-    find<StoryService>()..getStatuses();
+    find<AppDataService>().onAppOpen();
     Navigator.of(context).push(AppNavigation.route(TabsScreen()));
   }
 

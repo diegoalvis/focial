@@ -91,8 +91,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(controller.passwordShown
-                          ? Icons.visibility
-                          : Icons.visibility_off),
+                          ? Icons.visibility_off
+                          : Icons.visibility),
                       onPressed: () => controller.togglePasswordVisibility(),
                     ),
                   ],
@@ -110,7 +110,7 @@ class LoginScreen extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: FlatButton(
               padding: const EdgeInsets.only(left: 6.0, right: 16.0),
-              onPressed: () {},
+              onPressed: controller.forgotPassword,
               child: Text(
                 'Forgot password?',
                 style: AppTheme.flatButtonTheme,
@@ -124,30 +124,42 @@ class LoginScreen extends StatelessWidget {
               text: 'LOGIN',
             ),
           ),
-          SizedBox(height: 8.0),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'New to Focial?',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              FlatButton(
-                padding: const EdgeInsets.only(left: 6.0),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(AppNavigation.route(SignUpScreen()));
-                },
-                child: Text(
-                  'Create an account',
-                  style: AppTheme.flatButtonTheme,
+          controller.activateResendVerificationLink
+              ? _resendAccVerificationLink(controller)
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'New to Focial?',
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    FlatButton(
+                      padding: const EdgeInsets.only(left: 6.0),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(AppNavigation.route(SignUpScreen()));
+                      },
+                      child: Text(
+                        'Create an account',
+                        style: AppTheme.flatButtonTheme,
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          )
         ],
       );
+
+  Widget _resendAccVerificationLink(LoginViewModel controller) {
+    return FlatButton(
+      padding: const EdgeInsets.only(left: 6.0),
+      onPressed: controller.resendAccountVerificationLink,
+      child: Text(
+        'Resend verification link',
+        style: AppTheme.flatButtonTheme,
+      ),
+    );
+  }
 
   Widget _getSocialMediaButtons() {
     return Column(

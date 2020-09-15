@@ -6,7 +6,7 @@ part of 'post.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FocialPost _$PostFromJson(Map<String, dynamic> json) {
+FocialPost _$FocialPostFromJson(Map<String, dynamic> json) {
   return FocialPost(
     id: json['_id'] as String,
     type: json['type'] as int,
@@ -17,11 +17,12 @@ FocialPost _$PostFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PostToJson(FocialPost instance) => <String, dynamic>{
-      // '_id': instance.id,
-      // 'type': instance.type,
-      // 'authorData': instance.authorData,
+Map<String, dynamic> _$FocialPostToJson(FocialPost instance) =>
+    <String, dynamic>{
+      '_id': instance.id,
+      'type': instance.type,
+      'authorData': instance.authorData,
       'caption': instance.caption,
       'images': instance.images,
-      // 'likes': instance.likes,
+      'likes': instance.likes,
     };

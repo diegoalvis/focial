@@ -50,6 +50,7 @@ class NewPostViewModel extends ChangeNotifier {
       final response = await find<FocialPostService>()
           .newPost(FocialPost(caption: captionController.text, images: images));
       if (response.isSuccessful) {
+        // todo: update posts count in profile after successful post
         Navigator.of(_context).pop();
       } else {
         AppOverlays.showError(

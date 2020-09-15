@@ -22,7 +22,7 @@ class FocialPost {
       this.likes});
 
   factory FocialPost.fromJson(Map<String, dynamic> json) =>
-      _$PostFromJson(json);
+      _$FocialPostFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PostToJson(this);
+  Map<String, dynamic> toJson() => _$FocialPostToJson(this);
 }

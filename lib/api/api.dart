@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:chopper/chopper.dart';
 import 'package:focial/api/urls.dart';
 import 'package:focial/services/auth.dart';
-import 'package:get_it/get_it.dart';
+import 'package:focial/services/finder.dart';
 
 part 'api.chopper.dart';
 
-final auth = GetIt.I<AuthService>();
+final auth = find<AuthService>();
 
 @ChopperApi()
 abstract class FocialAPI extends ChopperService {
@@ -19,6 +19,10 @@ abstract class FocialAPI extends ChopperService {
 
   @Post(path: Urls.LOGIN)
   Future<Response<dynamic>> login(
+      {@Field() String email, @Field() String password});
+
+  @Post(path: Urls.RESEND_ACC_VERIFICATION_LINK)
+  Future<Response<dynamic>> resendAccountVerifyLink(
       {@Field() String email, @Field() String password});
 
   @Get(path: Urls.USER)

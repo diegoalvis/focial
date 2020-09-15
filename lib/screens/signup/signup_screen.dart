@@ -94,14 +94,14 @@ class SignUpScreen extends StatelessWidget {
                         hint: '***************',
                         icon: FontAwesomeIcons.unlockAlt,
                         validator: controller.validatePassword,
-                        isObscure: controller.passwordShown,
+                        isObscure: !controller.passwordShown,
                         save: controller.savePassword,
                       ),
                     ),
                     IconButton(
                       icon: Icon(controller.passwordShown
-                          ? Icons.visibility
-                          : Icons.visibility_off),
+                          ? Icons.visibility_off
+                          : Icons.visibility),
                       onPressed: controller.togglePasswordVisibility,
                     ),
                   ],

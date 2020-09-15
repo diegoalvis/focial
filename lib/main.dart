@@ -7,6 +7,7 @@ import 'package:focial/screens/splash/splash_screen.dart';
 import 'package:focial/screens/stories/new_story_viewmodel.dart';
 import 'package:focial/screens/tabs_screen/tabs_viewmodel.dart';
 import 'package:focial/services/api.dart';
+import 'package:focial/services/app_data.dart';
 import 'package:focial/services/auth.dart';
 import 'package:focial/services/finder.dart';
 import 'package:focial/services/post.dart';
@@ -30,6 +31,7 @@ void setupServices() {
   find.registerSingleton<UserData>(UserData());
   find.registerSingleton<StoryService>(StoryService());
   find.registerSingleton<FocialPostService>(FocialPostService());
+  find.registerSingleton<AppDataService>(AppDataService());
 }
 
 void disposeServices() {

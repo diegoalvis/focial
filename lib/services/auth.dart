@@ -47,13 +47,22 @@ class AuthService {
 
   Future<Response> login({String email, String password}) async {
     final response = await find<APIService>().api.login(
-      email: email,
-      password: password,
-    );
+          email: email,
+          password: password,
+        );
     if (response.isSuccessful) {
       _authStateSink.add(AuthState.LoggedIn);
     }
     await storeAuthTokens(response.headers);
+    return response;
+  }
+
+  Future<Response> resendAccountVerificationLink(
+      {String email, String password}) async {
+    final response = await find<APIService>().api.resendAccountVerifyLink(
+          email: email,
+          password: password,
+        );
     return response;
   }
 

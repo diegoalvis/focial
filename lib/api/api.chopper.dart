@@ -38,6 +38,15 @@ class _$FocialAPI extends FocialAPI {
   }
 
   @override
+  Future<Response<dynamic>> resendAccountVerifyLink(
+      {String email, String password}) {
+    final $url = 'auth/token/resend';
+    final $body = <String, dynamic>{'email': email, 'password': password};
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> getUser() {
     final $url = 'user';
     final $request = Request('GET', $url, client.baseUrl);
