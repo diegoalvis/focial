@@ -25,6 +25,20 @@ abstract class FocialAPI extends ChopperService {
   Future<Response<dynamic>> resendAccountVerifyLink(
       {@Field() String email, @Field() String password});
 
+  @Patch(path: Urls.UPDATE_PASSWORD)
+  Future<Response<dynamic>> updatePassword(
+      {@Field() String oldPassword, @Field() String newPassword});
+
+  @Post(path: Urls.SEND_PASSWORD_RESET_CODE)
+  Future<Response<dynamic>> sendPasswordResetCode({@Field() String email});
+
+  @Post(path: Urls.RE_SEND_PASSWORD_RESET_CODE)
+  Future<Response<dynamic>> resendPasswordResetCode({@Field() String email});
+
+  @Post(path: Urls.RESET_PASSWORD)
+  Future<Response<dynamic>> resetPassword(
+      {@Field() String email, @Field() String otp, @Field() String password});
+
   @Get(path: Urls.USER)
   Future<Response<dynamic>> getUser();
 

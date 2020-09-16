@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:focial/screens/forgot_password.dart';
+import 'package:focial/screens/forgot_password/forgot_password.dart';
 import 'package:focial/screens/tabs_screen/tabs_screen.dart';
 import 'package:focial/services/app_data.dart';
 import 'package:focial/services/auth.dart';

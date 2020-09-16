@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class OutlineBorderedTFWithIcon extends StatelessWidget {
+class TFWithIcon extends StatelessWidget {
   final String hint;
   final String label;
   final int validateLength;
@@ -12,15 +12,16 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
   final int maxLength;
   final TextEditingController controller;
   final int maxLines;
-  final IconData suffixIcon;
+  final Widget suffixIcon;
   final String initialValue;
   final EdgeInsets contentPadding;
   final Widget suffix;
   final Color borderColor;
   final IconData icon;
   final double iconSize;
+  final String error;
 
-  const OutlineBorderedTFWithIcon(
+  const TFWithIcon(
       {Key key,
       this.hint,
       this.label,
@@ -40,7 +41,8 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
       this.suffix,
       this.borderColor = Colors.white,
       this.icon,
-      this.iconSize})
+      this.iconSize,
+      this.error})
       : super(key: key);
 
   @override
@@ -77,6 +79,7 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
       cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
         suffix: suffix,
+        errorText: error,
         prefixIcon: Icon(
           icon,
           size: iconSize,
@@ -84,7 +87,7 @@ class OutlineBorderedTFWithIcon extends StatelessWidget {
         contentPadding: contentPadding,
         hintText: hint ?? ' ',
         labelText: label ?? ' ',
-        suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+        suffixIcon: suffixIcon != null ? suffixIcon : null,
         border: InputBorder.none,
       ),
     );
