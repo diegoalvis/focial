@@ -38,6 +38,56 @@ class _$FocialAPI extends FocialAPI {
   }
 
   @override
+  Future<Response<dynamic>> resendAccountVerifyLink(
+      {String email, String password}) {
+    final $url = 'auth/token/resend';
+    final $body = <String, dynamic>{'email': email, 'password': password};
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> updatePassword(
+      {String oldPassword, String newPassword}) {
+    final $url = 'auth/password';
+    final $body = <String, dynamic>{
+      'oldPassword': oldPassword,
+      'newPassword': newPassword
+    };
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> sendPasswordResetCode({String email}) {
+    final $url = 'auth/password/reset/code';
+    final $body = <String, dynamic>{'email': email};
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> resendPasswordResetCode({String email}) {
+    final $url = 'auth/password/reset/code/resend';
+    final $body = <String, dynamic>{'email': email};
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> resetPassword(
+      {String email, String otp, String password}) {
+    final $url = 'auth/password/reset';
+    final $body = <String, dynamic>{
+      'email': email,
+      'otp': otp,
+      'password': password
+    };
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> getUser() {
     final $url = 'user';
     final $request = Request('GET', $url, client.baseUrl);

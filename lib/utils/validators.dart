@@ -8,7 +8,7 @@ class FormValidators {
     if (emailRegex.hasMatch(value))
       return null;
     else
-      return "Invalid email";
+      return "Entered email is invalid";
   }
 
   String validatePassword(String value) {

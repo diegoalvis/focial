@@ -10,6 +10,8 @@ import 'package:focial/utils/server_responses.dart';
 enum AuthState { LoggedIn, LoggedOut }
 
 class AuthService {
+  final api = find<APIService>().api;
+
   StreamController<AuthState> _authStream = StreamController();
 
   Sink<AuthState> get _authStateSink => _authStream.sink;
@@ -37,16 +39,16 @@ class AuthService {
 
   Future<Response> register(
       {String name, String email, String password}) async {
-    final response = await find<APIService>().api.register(
-          name: name,
-          email: email,
-          password: password,
-        );
+    final response = await api.register(
+      name: name,
+      email: email,
+      password: password,
+    );
     return response;
   }
 
   Future<Response> login({String email, String password}) async {
-    final response = await find<APIService>().api.login(
+    final response = await api.login(
       email: email,
       password: password,
     );
@@ -55,6 +57,24 @@ class AuthService {
     }
     await storeAuthTokens(response.headers);
     return response;
+  }
+
+  Future<Response> resendAccountVerificationLink(
+      {String email, String password}) async {
+    final response = await api.resendAccountVerifyLink(
+      email: email,
+      password: password,
+    );
+    return response;
+  }
+
+  Future<Response> sendPasswordResetCode(String email) async {
+    final response = await api.sendPasswordResetCode(email: email);
+    return response;
+  }
+
+  Future<Response> resendPasswordResetCode(String email) async {
+    return sendPasswordResetCode(email);
   }
 
   Future<void> storeAuthTokens(Map<String, String> headers) async {

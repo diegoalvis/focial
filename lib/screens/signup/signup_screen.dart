@@ -65,7 +65,7 @@ class SignUpScreen extends StatelessWidget {
             key: controller.formKey,
             child: Column(
               children: [
-                OutlineBorderedTFWithIcon(
+                TFWithIcon(
                   label: 'Full name',
                   hint: 'John Doe',
                   icon: FontAwesomeIcons.user,
@@ -75,7 +75,7 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(
                   height: 8.0,
                 ),
-                OutlineBorderedTFWithIcon(
+                TFWithIcon(
                   label: 'Email',
                   hint: 'john@doe.com',
                   icon: Icons.mail_outline,
@@ -86,25 +86,19 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(
                   height: 8.0,
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlineBorderedTFWithIcon(
-                        label: 'Password',
-                        hint: '***************',
-                        icon: FontAwesomeIcons.unlockAlt,
-                        validator: controller.validatePassword,
-                        isObscure: controller.passwordShown,
-                        save: controller.savePassword,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(controller.passwordShown
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: controller.togglePasswordVisibility,
-                    ),
-                  ],
+                TFWithIcon(
+                  label: 'Password',
+                  hint: '***************',
+                  icon: FontAwesomeIcons.unlockAlt,
+                  validator: controller.validatePassword,
+                  isObscure: !controller.passwordShown,
+                  save: controller.savePassword,
+                  suffixIcon: IconButton(
+                    icon: Icon(controller.passwordShown
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                    onPressed: () => controller.togglePasswordVisibility(),
+                  ),
                 )
               ],
             ),
