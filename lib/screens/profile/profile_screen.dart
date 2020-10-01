@@ -75,7 +75,8 @@ class ProfileScreen extends StatelessWidget {
           _getProfileAndCoverPic(userDataProvider, size, profileViewModel),
           Center(
             child: Text(
-              '${userDataProvider.currentUser.firstName} ${userDataProvider.currentUser.lastName}',
+              '${userDataProvider.currentUser.firstName} ${userDataProvider.currentUser.lastName}'
+                  .replaceAll("null", ""),
               style: TextStyle(
                 color: AppTheme.textColor,
                 fontSize: 20.0,

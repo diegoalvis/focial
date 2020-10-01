@@ -1,28 +1,31 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'post.dart';
+part of 'post_feed.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-FocialPost _$FocialPostFromJson(Map<String, dynamic> json) {
-  return FocialPost(
+PostFeed _$PostFeedFromJson(Map<String, dynamic> json) {
+  return PostFeed(
     id: json['_id'] as String,
     type: json['type'] as int,
-    authorData: AuthorData.fromJson(json['authorData'] as Map<String, dynamic>),
+    authorData: AuthorData.fromJson(json['user'] as Map<String, dynamic>),
     caption: json['caption'] as String,
     images: (json['images'] as List).map((e) => e as String).toList(),
-    likes: (json['likes'] as List).map((e) => e as String).toList(),
+    likes: json['likes'] as int,
+    liked: json['liked'] as bool,
+    likedBy: (json['likedBy'] as List).map((e) => e as String).toList(),
   );
 }
 
-Map<String, dynamic> _$FocialPostToJson(FocialPost instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PostFeedToJson(PostFeed instance) => <String, dynamic>{
       '_id': instance.id,
       'type': instance.type,
-      'authorData': instance.authorData,
+      'user': instance.authorData,
       'caption': instance.caption,
       'images': instance.images,
       'likes': instance.likes,
+      'liked': instance.liked,
+      'likedBy': instance.likedBy,
     };

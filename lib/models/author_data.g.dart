@@ -8,7 +8,7 @@ part of 'author_data.dart';
 
 AuthorData _$AuthorDataFromJson(Map<String, dynamic> json) {
   return AuthorData(
-    id: json['id'] as String,
+    id: json['userId'] as String,
     photoUrl: json['photoUrl'] as String,
     username: json['username'] as String,
   );
@@ -16,7 +16,7 @@ AuthorData _$AuthorDataFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$AuthorDataToJson(AuthorData instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'userId': instance.id,
       'photoUrl': instance.photoUrl,
       'username': instance.username,
     };

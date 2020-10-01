@@ -10,7 +10,7 @@ import 'package:focial/services/api.dart';
 import 'package:focial/services/app_data.dart';
 import 'package:focial/services/auth.dart';
 import 'package:focial/services/finder.dart';
-import 'package:focial/services/post.dart';
+import 'package:focial/services/post_feed.dart';
 import 'package:focial/services/story.dart';
 import 'package:focial/services/user.dart';
 import 'package:focial/utils/theme.dart';
@@ -30,7 +30,7 @@ void setupServices() {
   find.registerSingleton<AuthService>(AuthService());
   find.registerSingleton<UserData>(UserData());
   find.registerSingleton<StoryService>(StoryService());
-  find.registerSingleton<FocialPostService>(FocialPostService());
+  find.registerSingleton<PostFeedService>(PostFeedService());
   find.registerSingleton<AppDataService>(AppDataService());
 }
 
