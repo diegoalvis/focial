@@ -69,6 +69,9 @@ abstract class FocialAPI extends ChopperService {
   @multipart
   Future<Response> uploadPostImage(@PartFile("file") String file);
 
+  @Get(path: Urls.POST)
+  Future<Response<dynamic>> getPosts();
+
   static FocialAPI create() {
     final client = ChopperClient(
         baseUrl: Urls.BASE_URL,

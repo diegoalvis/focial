@@ -61,7 +61,8 @@ class NewPost extends StatelessWidget {
                     ),
                     SizedBox(width: 16.0),
                     Text(
-                      currentUser.firstName + " " + currentUser.lastName,
+                      "${currentUser.firstName} ${currentUser.lastName}"
+                          .replaceAll("null", ""),
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,

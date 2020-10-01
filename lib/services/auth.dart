@@ -74,7 +74,8 @@ class AuthService {
   }
 
   Future<Response> resendPasswordResetCode(String email) async {
-    return sendPasswordResetCode(email);
+    final response = await api.resendPasswordResetCode(email: email);
+    return response;
   }
 
   Future<void> storeAuthTokens(Map<String, String> headers) async {

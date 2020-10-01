@@ -8,10 +8,10 @@ import 'package:flutter/material.dart'
         Colors,
         FocusScope,
         TextEditingController;
-import 'package:focial/models/post.dart';
+import 'package:focial/models/post_feed.dart';
 import 'package:focial/services/api.dart';
 import 'package:focial/services/finder.dart';
-import 'package:focial/services/post.dart';
+import 'package:focial/services/post_feed.dart';
 import 'package:focial/utils/overlays.dart';
 import 'package:focial/utils/theme.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -47,8 +47,8 @@ class NewPostViewModel extends ChangeNotifier {
       FocusScope.of(_context).requestFocus(FocusNode());
       captionError = null;
       showLoader();
-      final response = await find<FocialPostService>()
-          .newPost(FocialPost(caption: captionController.text, images: images));
+      final response = await find<PostFeedService>()
+          .newPost(PostFeed(caption: captionController.text, images: images));
       if (response.isSuccessful) {
         // todo: update posts count in profile after successful post
         Navigator.of(_context).pop();

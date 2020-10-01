@@ -4,6 +4,7 @@ part 'author_data.g.dart';
 
 @JsonSerializable(nullable: false)
 class AuthorData {
+  @JsonKey(name: "userId")
   String id;
   String photoUrl;
   String username;

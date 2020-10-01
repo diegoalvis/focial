@@ -1,5 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:focial/models/author_data.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'story_view.g.dart';
 
